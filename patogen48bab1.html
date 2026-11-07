@@ -28,23 +28,61 @@
     box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2);
   }
 
-  /* ==================== EFEK KEDIP SAAT DIBIUS ==================== */
+  /* ==================== EFEK KEDIP & MEMUDAR ==================== */
   body.flicker {
-    animation: flickerAnim 0.4s infinite alternate;
+    animation: flickerAnim 0.8s infinite alternate; 
   }
   @keyframes flickerAnim {
     0% { opacity: 1; filter: brightness(1) sepia(0); }
-    50% { opacity: 0.2; filter: brightness(0.5) sepia(1) hue-rotate(-50deg); }
-    100% { opacity: 0.8; filter: brightness(0.8) sepia(0.5) hue-rotate(-30deg); }
+    50% { opacity: 0.3; filter: brightness(0.6) sepia(1) hue-rotate(-50deg); }
+    100% { opacity: 0.9; filter: brightness(0.9) sepia(0.5) hue-rotate(-30deg); }
   }
   
-  /* Animasi memudar menjadi hitam */
   body.fade-out {
-    animation: fadeOutAnim 3s forwards;
+    animation: fadeOutAnim 4s forwards; 
   }
   @keyframes fadeOutAnim {
-    0% { opacity: 0.5; filter: brightness(0.5) sepia(1); }
+    0% { opacity: 0.3; filter: brightness(0.6) sepia(1); }
     100% { opacity: 0; background-color: #000; filter: brightness(0); }
+  }
+
+  /* Kotak Akhir Bab */
+  #end-screen {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10000;
+    width: 100%;
+    max-width: 400px;
+  }
+  #end-screen h1 {
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: #888;
+    margin-bottom: 30px;
+    font-weight: normal;
+  }
+  #end-screen a, #end-screen button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 10px;
+    background: transparent;
+    color: #ccc;
+    border: 1px solid #444;
+    text-decoration: none;
+    font-family: Georgia, serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: auto;
+    opacity: 1;
+  }
+  #end-screen a:hover, #end-screen button:hover {
+    background: #222;
+    color: #fff;
+    border-color: #888;
   }
 
   /* ==================== PANEL METER KETAKUTAN ==================== */
@@ -158,6 +196,13 @@
   <div class="fear-bar-bg">
     <div id="fear-bar"></div>
   </div>
+</div>
+
+<!-- Layar Akhir Bab (Tersembunyi) -->
+<div id="end-screen">
+  <h1>AKHIR BAB 1</h1>
+  <a href="pilihchapter.html">← Daftar Bab</a>
+  <button onclick="location.reload()">Baca Ulang</button>
 </div>
 
 <h2>Bab 1 — Apa Yang Terjadi?</h2>
@@ -356,8 +401,8 @@
   <button onclick="go('a19')">Bertanya</button>
 </div>
 
-<!-- ============ ADEGAN 19 (EFEK KEDIP & MEMUDAR) ============ -->
-<div id="a19" class="scene" data-fear="100" data-shake="true" data-flicker="true">
+<!-- ============ ADEGAN 19 (INTERAKSI TERAKHIR) ============ -->
+<div id="a19" class="scene" data-fear="100" data-shake="true">
   <p>Lily membuka mulut. "Apa maksudnya? Kenapa air liurku?"</p>
   <p>Tidak ada yang menjawab. Asisten itu sudah pergi. Dokter itu sudah berpaling.</p>
   <p>Lalu seseorang mendekat dari sisi lain—bukan dokter, bukan asisten. Seseorang yang tidak bisa ia lihat wajahnya, dengan tangan yang gemetar. Ia membawa jarum suntik.</p>
@@ -367,9 +412,8 @@
   <p>"Kamu akan baik-baik saja."</p>
   <p>Lalu gelap.</p>
   <div class="divider"></div>
-  <p style="color:#555; font-size:13px;">— Akhir Bab 1 —</p>
-  <button onclick="go('a1')">Baca ulang dari awal</button>
-  <a href="pilihchapter.html" style="display:block; margin-top:10px; color:#888; text-decoration:none; text-align:center;">← Kembali ke Daftar Bab</a>
+  <!-- Tombol ini memicu efek kedip dan akhir bab -->
+  <button onclick="triggerEnding()">Menyerah pada kegelapan...</button>
 </div>
 
 <script>
@@ -453,13 +497,13 @@ function go(id) {
     btn.classList.add('done');
   });
 
-  // 2. GETARAN LAYAR
+  // GETARAN LAYAR
   if (targetScene.dataset.shake === 'true') {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), 500); 
   }
 
-  // 3. METER KETAKUTAN
+  // METER KETAKUTAN
   const fearLevel = targetScene.dataset.fear || 0;
   const fearBar = document.getElementById('fear-bar');
   const fearText = document.getElementById('fear-text');
@@ -479,14 +523,13 @@ function go(id) {
     fearPanel.classList.add('high'); 
   }
 
-  // ==================== EFEK LAMPU POLISI ====================
+  // EFEK LAMPU POLISI
   clearInterval(policeInterval);
   document.body.classList.remove('police-blue', 'police-red');
 
   if (targetScene.dataset.police === 'true') {
     let isBlue = true;
     document.body.classList.add('police-blue');
-    
     policeInterval = setInterval(() => {
       if (isBlue) {
         document.body.classList.remove('police-blue');
@@ -499,24 +542,37 @@ function go(id) {
     }, 800); 
   }
 
-  // ==================== EFEK KEDIP SAAT DIBIUS (FLICKER & FADE) ====================
-  document.body.classList.remove('flicker', 'fade-out');
-
-  if (targetScene.dataset.flicker === 'true') {
-    document.body.classList.add('flicker');
-    
-    // Setelah 3 detik berkedip, layar meredup menjadi hitam perlahan
-    setTimeout(() => {
-      document.body.classList.remove('flicker');
-      document.body.classList.add('fade-out');
-    }, 3000);
-  }
-
-  // 1. EFEK KETIKAN
   startTyping(targetScene);
 }
 
+// ==================== FUNGSI AKHIR BAB (KEDIP & MENGHITAM) ====================
+function triggerEnding() {
+  // 1. Sembunyikan tombol agar tidak bisa diklik dua kali
+  document.querySelector('#a19 button').style.display = 'none';
+  
+  // 2. Mulai efek berkedip lambat
+  document.body.classList.add('flicker');
+
+  // 3. Setelah 3 detik, mulai memudar menjadi hitam
+  setTimeout(() => {
+    document.body.classList.remove('flicker');
+    document.body.classList.add('fade-out');
+  }, 3000);
+
+  // 4. Setelah 7 detik (3 detik kedip + 4 detik menghitam), munculkan menu akhir
+  setTimeout(() => {
+    document.getElementById('end-screen').style.display = 'block';
+    document.getElementById('fear-panel').style.display = 'none';
+    document.querySelector('h2').style.display = 'none';
+    
+    // Sembunyikan teks asli agar benar-benar bersih
+    document.getElementById('a19').style.display = 'none';
+  }, 7000);
+}
+
 window.onload = () => {
+  document.getElementById('end-screen').style.display = 'none';
+  
   const initialScene = document.getElementById('a1');
   const initialFear = initialScene.dataset.fear;
   document.getElementById('fear-bar').style.width = initialFear + '%';
