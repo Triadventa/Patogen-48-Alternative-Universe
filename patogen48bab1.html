@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lily — Bab 1: Apa Yang Terjadi?</title>
 <style>
   body {
@@ -12,8 +13,9 @@
     background: #0d0d0d;
     color: #d8d8d8;
     line-height: 1.7;
+    font-size: 16px; /* Ukuran font standar untuk semua teks */
   }
-  h2 { font-weight: normal; letter-spacing: 2px; color: #888; font-size: 14px; text-transform: uppercase; }
+  h2 { font-weight: normal; letter-spacing: 2px; color: #888; font-size: 14px; text-transform: uppercase; margin-bottom: 24px; }
   .scene { display: none; }
   .scene.active { display: block; animation: fade 0.6s ease; }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
@@ -35,7 +37,8 @@
   button.done { color: #6a9a6a; border-color: #2a3a2a; }
   button.done::after { content: " ✓"; float: right; color: #6a9a6a; }
   .divider { border-top: 1px solid #222; margin: 24px 0; }
-  .whisper { color: #666; font-style: italic; font-size: 14px; }
+  /* Ukuran font whisper dihapus agar sama dengan teks biasa */
+  .whisper { color: #888; font-style: italic; }
 </style>
 </head>
 <body>
@@ -56,11 +59,11 @@
 <!-- ============ ADEGAN 2: TERUS LARI ============ -->
 <div id="a2" class="scene">
   <p>Lily tidak menoleh. Ia terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala.</p>
-  <p>Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
+  <p class="whisper">Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
   <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan yang tidak masuk akal. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
-  <p>Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
+  <p class="whisper">Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
   <p>Lily mendorong sekali lagi, sekuat tenaga, dan tubuh itu terhempas jatuh ke aspal. Menggunakan kesempatan ini, Lily berlari sedikit sempoyongan karena kepanikannya.</p>
-  <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
+  <p class="whisper">Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
   <button id="b-a2-a4" onclick="go('a4')">Melihat lengan yang tergores</button>
   <button id="b-a2-a5" onclick="go('a5')">Terus berlari ke arah suara sirine</button>
@@ -143,7 +146,7 @@
 <!-- ============ ADEGAN 10: SENTUH ============ -->
 <div id="a10" class="scene">
   <p>Lily mengulurkan tangan. Ujung jarinya menyentuh bagian berwarna merah itu.</p>
-  <p>Lembab.</p>
+  <p class="whisper">Lembab.</p>
   <p>Ruangan ini sudah pernah dipakai. Dan itu tidak lama dari kedatangan Lily.</p>
   <div class="divider"></div>
   <button id="b-a10-a11" onclick="go('a11')">Berteriak</button>
