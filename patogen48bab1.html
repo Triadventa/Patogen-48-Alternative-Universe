@@ -581,10 +581,7 @@ function triggerNextChapter() {
   document.body.classList.add('fade-out');
   
   setTimeout(() => {
-    // Nanti jika bab2.html sudah dibuat, hapus alert dan gunakan baris window.location.href
-    alert("Bab 2 belum ditulis! Nantikan kelanjutannya ya.");
-    document.body.classList.remove('fade-out');
-    // window.location.href = 'bab2.html';
+    window.location.href = 'bab2.html';
   }, 1000);
 }
 
