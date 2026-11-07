@@ -564,39 +564,27 @@ function go(id) {
 
 // ==================== FUNGSI LAYAR MENGHITAM (FADE OUT) ====================
 function triggerEnding() {
-  // Sembunyikan tombol agar tidak bisa diklik dua kali
   document.querySelector('#a19 button').style.display = 'none';
-  
-  // Mulai efek memudar (fade out) selama 1.5 detik
   document.body.classList.add('fade-out');
 
-  // Setelah layar hitam total, munculkan menu akhir
   setTimeout(() => {
     document.getElementById('end-screen').style.display = 'block';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
-    
-    // Sembunyikan teks cerita agar bersih
     document.getElementById('a19').style.display = 'none';
-    
-    // Kembalikan opacity layar agar menu akhir terlihat
     document.body.classList.remove('fade-out');
-  }, 1600); // 1.6 detik
+  }, 1600);
 }
 
 // ==================== FUNGSI LANJUT KE BAB 2 ====================
 function triggerNextChapter() {
-  // Efek memudar saat pindah halaman
   document.body.classList.add('fade-out');
   
   setTimeout(() => {
-    // Karena file bab2.html belum ada, kita munculkan alert dulu.
-    // Nanti jika bab2.html sudah dibuat, baris di bawah ini diganti dengan:
-    // window.location.href = 'bab2.html';
+    // Nanti jika bab2.html sudah dibuat, hapus alert dan gunakan baris window.location.href
     alert("Bab 2 belum ditulis! Nantikan kelanjutannya ya.");
-    
-    // Batalkan efek fade jika bab 2 belum ada
     document.body.classList.remove('fade-out');
+    // window.location.href = 'bab2.html';
   }, 1000);
 }
 
