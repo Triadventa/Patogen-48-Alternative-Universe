@@ -13,23 +13,53 @@
     background: #0d0d0d;
     color: #d8d8d8;
     line-height: 1.7;
-    font-size: 16px; 
+    font-size: 16px;
+    overflow-x: hidden; /* Mencegah scroll ke samping saat layar bergetar */
   }
-  
-  /* Memaksa semua paragraf agar ukurannya sama persis */
+
+  /* ==================== 1. METER KETAKUTAN ==================== */
+  #fear-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: #222;
+    z-index: 9999;
+  }
+  #fear-bar {
+    height: 100%;
+    width: 0%;
+    background: #8b0000;
+    transition: width 1s ease-in-out, background 0.5s;
+  }
+  #fear-bar.high {
+    animation: pulse 0.5s infinite alternate;
+  }
+  @keyframes pulse {
+    from { opacity: 0.7; }
+    to { opacity: 1; box-shadow: 0 0 10px #ff0000; }
+  }
+
+  /* ==================== 2. GETARAN LAYAR ==================== */
+  .shake {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
+
+  /* Teks Dasar */
   p {
     font-size: 16px;
     margin-top: 0;
     margin-bottom: 16px;
+    min-height: 1.7em; /* Mencegah layar melompat saat teks sedang diketik */
   }
   
   h2 { 
-    font-weight: normal; 
-    letter-spacing: 2px; 
-    color: #888; 
-    font-size: 14px; 
-    text-transform: uppercase; 
-    margin-bottom: 24px; 
+    font-weight: normal; letter-spacing: 2px; color: #888; 
+    font-size: 14px; text-transform: uppercase; margin-bottom: 24px; 
   }
   
   .scene { display: none; }
@@ -37,17 +67,10 @@
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   
   button {
-    display: block;
-    margin: 12px 0;
-    padding: 14px 16px;
-    background: #1a1a1a;
-    color: #ccc;
-    border: 1px solid #333;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    font-family: Georgia, serif;
-    font-size: 15px;
+    display: block; margin: 12px 0; padding: 14px 16px;
+    background: #1a1a1a; color: #ccc; border: 1px solid #333;
+    cursor: pointer; width: 100%; text-align: left;
+    font-family: Georgia, serif; font-size: 15px;
     transition: background 0.2s, border 0.2s;
   }
   
@@ -60,21 +83,24 @@
 </head>
 <body>
 
+<!-- Garis Ketakutan di paling atas -->
+<div id="fear-container"><div id="fear-bar"></div></div>
+
 <h2>Bab 1 — Apa Yang Terjadi?</h2>
 
-<!-- ============ ADEGAN 1: KOTA ============ -->
-<div id="a1" class="scene active">
+<!-- ============ ADEGAN 1 ============ -->
+<div id="a1" class="scene active" data-fear="10">
   <p>Lily tidak tahu apa yang sedang terjadi. Tidak ada yang tahu.</p>
   <p>Jalanan ramai. Terlalu ramai. Orang-orang berlarian ke segala arah, sebagian menangis, sebagian merekam dengan ponsel, sebagian lagi—entah bodoh atau berani—maju menghadapi sesuatu yang tidak mereka pahami.</p>
   <p>Di ujung jalan, lebih dari satu orang berteriak. Teriakan terburuk yang pernah ia dengar.</p>
   <p>Lily berlari. Terus berlari. Bukan karena ia tahu harus ke mana. Hanya saja, berdiri diam terasa seperti pilihan yang salah.</p>
   <div class="divider"></div>
-  <button id="b-a1-a2" onclick="go('a2')">Terus berlari, tanpa menoleh</button>
-  <button id="b-a1-a3" onclick="go('a3')">Menoleh sebentar, melihat apa yang terjadi</button>
+  <button onclick="go('a2')">Terus berlari, tanpa menoleh</button>
+  <button onclick="go('a3')">Menoleh sebentar, melihat apa yang terjadi</button>
 </div>
 
-<!-- ============ ADEGAN 2: TERUS LARI ============ -->
-<div id="a2" class="scene">
+<!-- ============ ADEGAN 2 ============ -->
+<div id="a2" class="scene" data-fear="30" data-shake="true">
   <p>Lily tidak menoleh. Ia terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala.</p>
   <p>Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
   <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan yang tidak masuk akal. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
@@ -82,159 +108,159 @@
   <p>Lily mendorong sekali lagi, sekuat tenaga, dan tubuh itu terhempas jatuh ke aspal. Menggunakan kesempatan ini, Lily berlari sedikit sempoyongan karena kepanikannya.</p>
   <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
-  <button id="b-a2-a4" onclick="go('a4')">Melihat lengan yang tergores</button>
-  <button id="b-a2-a5" onclick="go('a5')">Terus berlari ke arah suara sirine</button>
+  <button onclick="go('a4')">Melihat lengan yang tergores</button>
+  <button onclick="go('a5')">Terus berlari ke arah suara sirine</button>
 </div>
 
-<!-- ============ ADEGAN 3: MENOLEH ============ -->
-<div id="a3" class="scene">
+<!-- ============ ADEGAN 3 ============ -->
+<div id="a3" class="scene" data-fear="25">
   <p>Lily menoleh.</p>
   <p>Seorang pria baru saja terlepas dari kejaran orang-orang aneh. Ia bersembunyi di balik badan mobil, duduk dan meremas bahu kanannya yang terluka. Tangannya terkontaminasi—entah oleh apa, ia tidak tahu. Lalu ia menyentuh lukanya yang berdarah.</p>
   <p>Tiba-tiba, seluruh tubuh pria itu kaku. Tubuhnya menegang. Matanya perlahan menjadi merah.</p>
   <p>Lily tidak menunggu lebih lama. Ia berlari ketakutan.</p>
   <div class="divider"></div>
-  <button id="b-a3-a2" onclick="go('a2')">Terus berlari, tanpa menoleh lagi</button>
+  <button onclick="go('a2')">Terus berlari, tanpa menoleh lagi</button>
 </div>
 
-<!-- ============ ADEGAN 4: LENGAN ============ -->
-<div id="a4" class="scene">
+<!-- ============ ADEGAN 4 ============ -->
+<div id="a4" class="scene" data-fear="30">
   <p>Lily melihat lengannya. Ada goresan gigi—tipis, merah, dan darah mengalir pelan dari lukanya. Ia menyentuhnya dengan jari. Perih terasa.</p>
   <p>Ia tidak punya air untuk membasuh. Ia tidak punya apa pun. Jadi ia hanya menekan lengannya dengan telapak tangan, lalu berlari lagi.</p>
   <p>Di kejauhan, ia melihat lampu biru. Polisi.</p>
   <div class="divider"></div>
-  <button id="b-a4-a5" onclick="go('a5')">Berlari ke arah polisi</button>
+  <button onclick="go('a5')">Berlari ke arah polisi</button>
 </div>
 
-<!-- ============ ADEGAN 5: POLISI ============ -->
-<div id="a5" class="scene">
+<!-- ============ ADEGAN 5 ============ -->
+<div id="a5" class="scene" data-fear="40">
   <p>Lily berlari ke arah polisi. Ia mengangkat tangannya, berteriak minta tolong. Untuk sesaat, ia merasa lega—polisi itu melihatnya, mengangguk, mengangkat tangannya seolah akan menolong.</p>
   <p>Lalu tangan itu mencengkeram lengan Lily. Kuat dan kasar.</p>
   <p>"Jangan bergerak," perintah polisi itu. Ucapan itu bukan seperti suara orang yang menyelamatkan.</p>
   <p>Lily semakin panik dan membuka mulut untuk bertanya. Tapi polisi itu sudah menekan radionya dan berkata sesuatu yang tidak ia dengar.</p>
   <p>Lily diseret paksa. Ia dibawa menuju mobil besar yang biasa digunakan untuk membawa kriminal. Di dekatnya, ada orang lain—seorang pria tua, seorang wanita muda, juga seorang remaja yang menangis. Mereka juga ditangkap. Mereka juga diseret. Namun, tidak ada yang menjelaskan apa pun.</p>
   <div class="divider"></div>
-  <button id="b-a5-a6" onclick="go('a6')">Melihat ke arah orang-orang lain yang ditangkap</button>
-  <button id="b-a5-a7" onclick="go('a7')">Mencoba bertanya pada polisi</button>
+  <button onclick="go('a6')">Melihat ke arah orang-orang lain yang ditangkap</button>
+  <button onclick="go('a7')">Mencoba bertanya pada polisi</button>
 </div>
 
-<!-- ============ ADEGAN 6: ORANG LAIN ============ -->
-<div id="a6" class="scene">
+<!-- ============ ADEGAN 6 ============ -->
+<div id="a6" class="scene" data-fear="40">
   <p>Wanita muda di sebelahnya menangis tanpa suara. Pria tua itu diam, matanya kosong. Remaja yang di depannya terus berkata, "Aku tidak melakukan apa-apa, aku tidak melakukan apa-apa," seperti mantra.</p>
   <p>Lily melihat lengan wanita muda itu. Ada bekas gigitan. Sama seperti lengannya.</p>
   <p>Lalu ia melihat lengan pria tua itu. Tidak ada bekas gigitan. Tapi ia juga ditangkap.</p>
   <p>Lily tidak mengerti. Ia tidak mengerti apa pun.</p>
   <div class="divider"></div>
-  <button id="b-a6-a7" onclick="go('a7')">Mencoba bertanya pada polisi</button>
+  <button onclick="go('a7')">Mencoba bertanya pada polisi</button>
 </div>
 
-<!-- ============ ADEGAN 7: BERTANYA ============ -->
-<div id="a7" class="scene">
+<!-- ============ ADEGAN 7 ============ -->
+<div id="a7" class="scene" data-fear="50" data-shake="true">
   <p>"Kenapa? Kenapa aku ditangkap? Harusnya kalian menangkap orang-orang gila itu!"</p>
   <p>Polisi itu tidak menoleh. Ia terus berjalan, menyeret Lily dan yang lainnya seperti menyeret tas masuk ke dalam mobil.</p>
   <p>Sebuah borgol dikaitkan pada kedua tangan Lily. Matanya ditutup dengan kain hingga ia tak tahu keadaan di dalam mobil tersebut. Yang bisa ia dengar hanya suara tangisan dan teriakan.</p>
   <p>Mesin mobil menyala. Lalu bergerak menuju entah ke mana.</p>
   <p>Lily hanya diam. Bukan karena patuh atau merasa aman, melainkan takut. Ia takut polisi itu akan melakukan sesuatu jika ia memberontak.</p>
   <div class="divider"></div>
-  <button id="b-a7-a8" onclick="go('a8')">Diam dalam kelelahan</button>
+  <button onclick="go('a8')">Diam dalam kelelahan</button>
 </div>
 
-<!-- ============ ADEGAN 8: SAMPAI ============ -->
-<div id="a8" class="scene">
+<!-- ============ ADEGAN 8 ============ -->
+<div id="a8" class="scene" data-fear="60">
   <p>Dua jam. Mungkin lebih. Lily tidak bisa menghitung. Mobil itu terus bergerak, dan teriakan di sekitarnya sudah redup—hanya tersisa isak tangis dan doa permohonan.</p>
   <p>Lalu mobil akhirnya berhenti. Lily dan lainnya yang masih kebingungan dibawa turun dengan mata yang masih tertutup. Mereka diseret melewati lorong panjang. Lily tidak bisa melihat apa pun. Yang ia dengar pun sama: permintaan tolong dan jeritan.</p>
   <p>Lalu, sebuah pintu berat terbuka. Polisi itu membuka borgol di tangan Lily dan mendorongnya masuk dengan kasar hingga ia tersungkur di lantai itu.</p>
   <p>Pintu pun ditutup.</p>
   <div class="divider"></div>
-  <button id="b-a8-a9" onclick="go('a9')">Membuka penutup mata</button>
+  <button onclick="go('a9')">Membuka penutup mata</button>
 </div>
 
-<!-- ============ ADEGAN 9: RUANGAN ============ -->
-<div id="a9" class="scene">
+<!-- ============ ADEGAN 9 ============ -->
+<div id="a9" class="scene" data-fear="65">
   <p>Ruangan itu tidak besar, tidak kecil. Cukup untuk berbaring, tidak cukup untuk berjalan. Lantainya beton. Tidak ada kasur. Tidak ada jendela. Satu lampu di langit-langit, redup, berkedip pelan.</p>
   <p>Dinding-dindingnya penuh goresan. Bukan goresan yang rapi, seperti dibuat saat ketakutan.</p>
   <p>Dan di salah satu dinding di sebelah kanannya, tepat berada sejajar dengan tinggi badan, ada bekas sesuatu yang berwarna merah:</p>
   <p>Lily pun menelan ludah ketakutan saat menyadari bekas apa itu.</p>
   <div class="divider"></div>
-  <button id="b-a9-a10" onclick="go('a10')">Menyentuh bekas itu</button>
-  <button id="b-a9-a11" onclick="go('a11')">Berteriak</button>
-  <button id="b-a9-a12" onclick="go('a12')">Duduk di sudut, menahan napas</button>
+  <button onclick="go('a10')">Menyentuh bekas itu</button>
+  <button onclick="go('a11')">Berteriak</button>
+  <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
 </div>
 
-<!-- ============ ADEGAN 10: SENTUH ============ -->
-<div id="a10" class="scene">
+<!-- ============ ADEGAN 10 ============ -->
+<div id="a10" class="scene" data-fear="75" data-shake="true">
   <p>Lily mengulurkan tangan. Ujung jarinya menyentuh bagian berwarna merah itu.</p>
   <p>Lembab.</p>
   <p>Ruangan ini sudah pernah dipakai. Dan itu tidak lama dari kedatangan Lily.</p>
   <div class="divider"></div>
-  <button id="b-a10-a11" onclick="go('a11')">Berteriak</button>
-  <button id="b-a10-a12" onclick="go('a12')">Duduk di sudut, menahan napas</button>
+  <button onclick="go('a11')">Berteriak</button>
+  <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
 </div>
 
-<!-- ============ ADEGAN 11: TERIAK ============ -->
-<div id="a11" class="scene">
+<!-- ============ ADEGAN 11 ============ -->
+<div id="a11" class="scene" data-fear="85" data-shake="true">
   <p>"LEPASKAN AKU!"</p>
   <p>Suara Lily memantul di dinding beton. Tidak ada jawaban. Tidak ada langkah kaki. Tidak ada apa pun yang merespon teriakannya.</p>
   <p>Ia berteriak lagi. Dan lagi.</p>
   <p>Tenggorokannya mulai perih. Suaranya pecah. Tapi ia terus berteriak sampai yang keluar hanya suara serak, seperti sesuatu yang tersangkut di kerongkongannya.</p>
   <p>Lalu tubuhnya menyerah. Ia jatuh ke lantai beton, dan dunia menjadi gelap.</p>
   <div class="divider"></div>
-  <button id="b-a11-a13" onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
+  <button onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
 </div>
 
-<!-- ============ ADEGAN 12: SUDUT ============ -->
-<div id="a12" class="scene">
+<!-- ============ ADEGAN 12 ============ -->
+<div id="a12" class="scene" data-fear="70">
   <p>Lily merangkak ke sudut terjauh dari pintu. Di sana, ia memeluk lututnya.</p>
   <p>Di sudut itu, ia menemukan sesuatu: bekas tapak tangan di dinding. Kecil. Jauh lebih kecil dari tangannya.</p>
   <p>Lily pun memejamkan matanya. Ia lelah, lalu tertidur tanpa sadar.</p>
   <div class="divider"></div>
-  <button id="b-a12-a13" onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
+  <button onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
 </div>
 
-<!-- ============ ADEGAN 13: PINTU TERBUKA ============ -->
-<div id="a13" class="scene">
+<!-- ============ ADEGAN 13 ============ -->
+<div id="a13" class="scene" data-fear="75" data-shake="true">
   <p>Pintu besi itu terbuka dengan suara berat.</p>
   <p>Lily terkejut dan terbangun. Kepalanya pusing. Ia mencoba berdiri, tapi dua orang sudah ada di sisinya—satu memegang lengan kiri, satu memegang lengan kanan. Tidak kasar, tapi tidak bisa dilawan.</p>
   <p>Ia dibawa keluar. Lorong itu panjang, lampunya putih, dan tidak ada satu pun orang yang menatapnya.</p>
   <p>Ia bertanya. Suaranya serak, hampir tidak terdengar. "Ke mana? Kenapa? Apa salahku?"</p>
   <p>Tidak ada yang menjawab.</p>
   <div class="divider"></div>
-  <button id="b-a13-a14" onclick="go('a14')">Melihat ke lorong saat dibawa</button>
-  <button id="b-a13-a15" onclick="go('a15')">Terus bertanya sambil berjalan</button>
+  <button onclick="go('a14')">Melihat ke lorong saat dibawa</button>
+  <button onclick="go('a15')">Terus bertanya sambil berjalan</button>
 </div>
 
-<!-- ============ ADEGAN 14: LORONG ============ -->
-<div id="a14" class="scene">
+<!-- ============ ADEGAN 14 ============ -->
+<div id="a14" class="scene" data-fear="75">
   <p>Lorong itu bercabang. Di setiap cabang, ada pintu besi seperti pintu selnya. Beberapa tertutup. Beberapa sedikit terbuka.</p>
   <p>Dari salah satu pintu yang terbuka, Lily melihat sekilas: sebuah ruangan dengan kasur tipis, dinding putih, dan seseorang duduk di sudut. Tidak bergerak. Tidak menoleh.</p>
   <p>Lalu ia melewatinya.</p>
   <div class="divider"></div>
-  <button id="b-a14-a15" onclick="go('a15')">Terus bertanya sambil berjalan</button>
+  <button onclick="go('a15')">Terus bertanya sambil berjalan</button>
 </div>
 
-<!-- ============ ADEGAN 15: LABORATORIUM ============ -->
-<div id="a15" class="scene">
+<!-- ============ ADEGAN 15 ============ -->
+<div id="a15" class="scene" data-fear="80">
   <p>Pintu terakhir terbuka, dan Lily masuk ke ruangan yang terang.</p>
   <p>Laboratorium. Orang-orang berbaju APD tertutup bergerak cepat, tanpa suara, dan kondusif seperti robot. Monitor menyala. Mesin berdengung. Tidak ada yang menoleh ke arahnya.</p>
   <p>Di tengah ruangan, ada empat kursi periksa. Dua orang duduk terikat di sana. Mereka tidak bergerak. Mata mereka terbuka, tapi tidak melihat apa pun.</p>
   <p>Lily dibawa ke kursi keempat. Tangannya diikat seperti yang lain. Sebuah jarum masuk ke lengannya yang tergigit. Darahnya diambil.</p>
   <p>Seorang dokter mendekat. Ia memeriksa mata Lily dengan senter kecil. Lily membuka mulut untuk bertanya, tapi dokter itu sudah berpaling sebelum ia sempat mengucapkan satu kata.</p>
   <div class="divider"></div>
-  <button id="b-a15-a16" onclick="go('a16')">Melihat ke arah dua orang di kursi lain</button>
-  <button id="b-a15-a17" onclick="go('a17')">Menatap dokter yang memeriksanya</button>
+  <button onclick="go('a16')">Melihat ke arah dua orang di kursi lain</button>
+  <button onclick="go('a17')">Menatap dokter yang memeriksanya</button>
 </div>
 
-<!-- ============ ADEGAN 16: DUA ORANG ============ -->
-<div id="a16" class="scene">
+<!-- ============ ADEGAN 16 ============ -->
+<div id="a16" class="scene" data-fear="85">
   <p>Lily menoleh ke kursi di sebelahnya. Seorang pria. Matanya terbuka, namun ia tak bergerak seperti orang yang tidak sadarkan diri.</p>
   <p>Di kursi berikutnya, itu wanita yang bersamanya saat di mobil. Matanya merah dan berair. Tapi ia melihat Lily. Lily tahu itu.</p>
   <p>Kursi ketiga kosong. Tapi tali pengikatnya masih ada. Seperti seseorang baru saja diambil dari sana.</p>
   <p>Lily menelan ludah.</p>
   <div class="divider"></div>
-  <button id="b-a16-a17" onclick="go('a17')">Menatap dokter yang memeriksanya</button>
+  <button onclick="go('a17')">Menatap dokter yang memeriksanya</button>
 </div>
 
-<!-- ============ ADEGAN 17: DOKTER ============ -->
-<div id="a17" class="scene">
+<!-- ============ ADEGAN 17 ============ -->
+<div id="a17" class="scene" data-fear="85">
   <p>Dokter itu tidak tua, tidak muda. Wajahnya datar. Tidak ada kemarahan, tidak ada belas kasihan. Hanya konsentrasi.</p>
   <p>Ia memeriksa mata Lily, lalu nadinya, lalu mencatat sesuatu di papan klip. Lily mencoba menangkap matanya. Dokter itu tidak menoleh.</p>
   <p>"Tolong," kata Lily, suaranya serak. "Kenapa aku di sini?"</p>
@@ -242,22 +268,22 @@
   <p>"Kamu akan tahu."</p>
   <p>Lalu ia pergi.</p>
   <div class="divider"></div>
-  <button id="b-a17-a18" onclick="go('a18')">Menunggu hasil tes darah</button>
+  <button onclick="go('a18')">Menunggu hasil tes darah</button>
 </div>
 
-<!-- ============ ADEGAN 18: HASIL TES ============ -->
-<div id="a18" class="scene">
+<!-- ============ ADEGAN 18 ============ -->
+<div id="a18" class="scene" data-fear="90">
   <p>Waktu berlalu. Lily tidak tahu berapa lama. Mesin terus berdengung. Orang-orang ber-APD terus bergerak.</p>
   <p>Lalu seorang asisten datang membawa selembar hasil tes. Dokter mengambilnya, membacanya, dan menggelengkan kepala.</p>
   <p>"Darahnya normal," katanya, pelan. "Tidak ada infeksi. Tidak ada antibodi. Tidak ada apa pun."</p>
   <p>Ia menatap Lily lama. Lalu berkata kepada asistennya:</p>
   <p>"Periksa air liurnya."</p>
   <div class="divider"></div>
-  <button id="b-a18-a19" onclick="go('a19')">Bertanya</button>
+  <button onclick="go('a19')">Bertanya</button>
 </div>
 
-<!-- ============ ADEGAN 19: BIUS ============ -->
-<div id="a19" class="scene">
+<!-- ============ ADEGAN 19 ============ -->
+<div id="a19" class="scene" data-fear="100" data-shake="true">
   <p>Lily membuka mulut. "Apa maksudnya? Kenapa air liurku?"</p>
   <p>Tidak ada yang menjawab. Asisten itu sudah pergi. Dokter itu sudah berpaling.</p>
   <p>Lalu seseorang mendekat dari sisi lain—bukan dokter, bukan asisten. Seseorang yang tidak bisa ia lihat wajahnya, dengan tangan yang gemetar. Ia membawa jarum suntik.</p>
@@ -273,14 +299,129 @@
 </div>
 
 <script>
+// ==================== LOGIKA EFEK KETIKAN & INTERAKSI ====================
+
+let isTyping = false;
+let typeTimeout;
+
+// Fungsi untuk menghentikan ketikan seketika (jika user klik layar)
+function finishTyping() {
+  if (!isTyping) return;
+  clearTimeout(typeTimeout);
+  isTyping = false;
+  
+  const activeScene = document.querySelector('.scene.active');
+  const paragraphs = activeScene.querySelectorAll('p');
+  paragraphs.forEach(p => {
+    if (p.dataset.fulltext) {
+      p.innerHTML = p.dataset.fulltext;
+    }
+  });
+  
+  // Tampilkan tombol setelah selesai
+  const btns = activeScene.querySelectorAll('button');
+  btns.forEach(btn => btn.style.opacity = '1');
+}
+
+// Fungsi efek mengetik
+function startTyping(sceneElement) {
+  isTyping = true;
+  const paragraphs = sceneElement.querySelectorAll('p');
+  
+  // Sembunyikan tombol dulu
+  const btns = sceneElement.querySelectorAll('button');
+  btns.forEach(btn => btn.style.opacity = '0'); // Bisa diganti 'display:none' jika ingin hilang total
+  
+  let pIndex = 0;
+  let charIndex = 0;
+  
+  // Simpan teks asli dan kosongkan teks yang tampil
+  paragraphs.forEach(p => {
+    p.dataset.fulltext = p.innerHTML;
+    p.innerHTML = '';
+  });
+
+  function typeChar() {
+    if (!isTyping) return; // Hentikan jika user klik skip
+    
+    if (pIndex >= paragraphs.length) {
+      isTyping = false;
+      btns.forEach(btn => {
+        btn.style.opacity = '1';
+        btn.style.transition = 'opacity 0.5s';
+      });
+      return;
+    }
+
+    const currentP = paragraphs[pIndex];
+    const fullText = currentP.dataset.fulltext;
+    
+    // Cek jika teks mengandung tag HTML (seperti <br>), kita ketik per karakter teks saja
+    if (charIndex < fullText.length) {
+      // Ketik per 2-3 karakter agar tidak terlalu lambat
+      const charsToAdd = fullText.substring(charIndex, charIndex + 3);
+      currentP.innerHTML += charsToAdd;
+      charIndex += 3;
+      
+      // Kecepatan ketik (20ms per 3 huruf, bisa diubah)
+      typeTimeout = setTimeout(typeChar, 20); 
+    } else {
+      pIndex++;
+      charIndex = 0;
+      // Jeda antar paragraf
+      typeTimeout = setTimeout(typeChar, 400); 
+    }
+  }
+  
+  typeChar();
+}
+
+// Klik di mana saja untuk mempercepat ketikan
+document.body.addEventListener('click', finishTyping);
+
+// Fungsi navigasi antar adegan
 function go(id) {
+  // Hentikan ketikan sebelumnya jika masih berjalan
+  if (isTyping) finishTyping();
+
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const targetScene = document.getElementById(id);
+  targetScene.classList.add('active');
+  
+  // Scroll ke atas
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Tandai tombol yang sudah diklik
   document.querySelectorAll('button[onclick*="go(\'' + id + '\')"]').forEach(btn => {
     btn.classList.add('done');
   });
+
+  // ==================== 2. EFEK GETARAN ====================
+  if (targetScene.dataset.shake === 'true') {
+    document.body.classList.add('shake');
+    // Hapus class setelah animasi selesai agar bisa digunakan lagi
+    setTimeout(() => document.body.classList.remove('shake'), 500); 
+  }
+
+  // ==================== 3. METER KETAKUTAN ====================
+  const fearLevel = targetScene.dataset.fear || 0;
+  const fearBar = document.getElementById('fear-bar');
+  fearBar.style.width = fearLevel + '%';
+  
+  if (fearLevel >= 80) {
+    fearBar.classList.add('high');
+  } else {
+    fearBar.classList.remove('high');
+  }
+
+  // ==================== 1. JALANKAN EFEK KETIKAN ====================
+  startTyping(targetScene);
 }
+
+// Jalankan efek ketikan untuk scene pertama (a1) saat halaman pertama kali dibuka
+window.onload = () => {
+  startTyping(document.getElementById('a1'));
+};
 </script>
 
 </body>
