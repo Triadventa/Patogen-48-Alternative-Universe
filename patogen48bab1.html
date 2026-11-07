@@ -15,7 +15,34 @@
     line-height: 1.7;
     font-size: 16px;
     overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    /* Transisi untuk fade-out saat pindah bab */
+    transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease;
+  }
+
+  /* ==================== TOMBOL X (KELUAR) ==================== */
+  #btn-exit {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(20, 20, 20, 0.8);
+    color: #888;
+    border: 1px solid #444;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  #btn-exit:hover {
+    background: #333;
+    color: #fff;
+    border-color: #888;
   }
 
   /* ==================== EFEK LAMPU POLISI ==================== */
@@ -28,22 +55,9 @@
     box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2);
   }
 
-  /* ==================== EFEK KEDIP & MEMUDAR ==================== */
-  body.flicker {
-    animation: flickerAnim 0.8s infinite alternate; 
-  }
-  @keyframes flickerAnim {
-    0% { opacity: 1; filter: brightness(1) sepia(0); }
-    50% { opacity: 0.3; filter: brightness(0.6) sepia(1) hue-rotate(-50deg); }
-    100% { opacity: 0.9; filter: brightness(0.9) sepia(0.5) hue-rotate(-30deg); }
-  }
-  
+  /* ==================== EFEK MEMUDAR (FADE OUT) ==================== */
   body.fade-out {
-    animation: fadeOutAnim 4s forwards; 
-  }
-  @keyframes fadeOutAnim {
-    0% { opacity: 0.3; filter: brightness(0.6) sepia(1); }
-    100% { opacity: 0; background-color: #000; filter: brightness(0); }
+    opacity: 0;
   }
 
   /* Kotak Akhir Bab */
@@ -64,22 +78,22 @@
     margin-bottom: 30px;
     font-weight: normal;
   }
-  #end-screen a, #end-screen button {
-    display: inline-block;
-    padding: 12px 24px;
-    margin: 10px;
+  #end-screen button, #end-screen a {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 14px;
     background: transparent;
     color: #ccc;
     border: 1px solid #444;
     text-decoration: none;
     font-family: Georgia, serif;
-    font-size: 14px;
+    font-size: 15px;
     cursor: pointer;
     transition: 0.3s;
-    width: auto;
-    opacity: 1;
+    text-align: center;
   }
-  #end-screen a:hover, #end-screen button:hover {
+  #end-screen button:hover, #end-screen a:hover {
     background: #222;
     color: #fff;
     border-color: #888;
@@ -187,6 +201,9 @@
 </head>
 <body>
 
+<!-- Tombol X untuk keluar -->
+<a href="pilihchapter.html" id="btn-exit" title="Kembali ke Daftar Bab">✕</a>
+
 <!-- Panel Ketakutan -->
 <div id="fear-panel">
   <div class="fear-label">
@@ -201,8 +218,9 @@
 <!-- Layar Akhir Bab (Tersembunyi) -->
 <div id="end-screen">
   <h1>AKHIR BAB 1</h1>
-  <a href="pilihchapter.html">← Daftar Bab</a>
-  <button onclick="location.reload()">Baca Ulang</button>
+  <button onclick="triggerNextChapter()">Lanjut ke Bab 2 →</button>
+  <button onclick="location.reload()">Baca Ulang dari Awal</button>
+  <a href="pilihchapter.html">Kembali ke Daftar Bab</a>
 </div>
 
 <h2>Bab 1 — Apa Yang Terjadi?</h2>
@@ -412,8 +430,7 @@
   <p>"Kamu akan baik-baik saja."</p>
   <p>Lalu gelap.</p>
   <div class="divider"></div>
-  <!-- Tombol ini memicu efek kedip dan akhir bab -->
-  <button onclick="triggerEnding()">Menyerah pada kegelapan...</button>
+  <button onclick="triggerEnding()">Lanjut...</button>
 </div>
 
 <script>
@@ -545,29 +562,42 @@ function go(id) {
   startTyping(targetScene);
 }
 
-// ==================== FUNGSI AKHIR BAB (KEDIP & MENGHITAM) ====================
+// ==================== FUNGSI LAYAR MENGHITAM (FADE OUT) ====================
 function triggerEnding() {
-  // 1. Sembunyikan tombol agar tidak bisa diklik dua kali
+  // Sembunyikan tombol agar tidak bisa diklik dua kali
   document.querySelector('#a19 button').style.display = 'none';
   
-  // 2. Mulai efek berkedip lambat
-  document.body.classList.add('flicker');
+  // Mulai efek memudar (fade out) selama 1.5 detik
+  document.body.classList.add('fade-out');
 
-  // 3. Setelah 3 detik, mulai memudar menjadi hitam
-  setTimeout(() => {
-    document.body.classList.remove('flicker');
-    document.body.classList.add('fade-out');
-  }, 3000);
-
-  // 4. Setelah 7 detik (3 detik kedip + 4 detik menghitam), munculkan menu akhir
+  // Setelah layar hitam total, munculkan menu akhir
   setTimeout(() => {
     document.getElementById('end-screen').style.display = 'block';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
     
-    // Sembunyikan teks asli agar benar-benar bersih
+    // Sembunyikan teks cerita agar bersih
     document.getElementById('a19').style.display = 'none';
-  }, 7000);
+    
+    // Kembalikan opacity layar agar menu akhir terlihat
+    document.body.classList.remove('fade-out');
+  }, 1600); // 1.6 detik
+}
+
+// ==================== FUNGSI LANJUT KE BAB 2 ====================
+function triggerNextChapter() {
+  // Efek memudar saat pindah halaman
+  document.body.classList.add('fade-out');
+  
+  setTimeout(() => {
+    // Karena file bab2.html belum ada, kita munculkan alert dulu.
+    // Nanti jika bab2.html sudah dibuat, baris di bawah ini diganti dengan:
+    // window.location.href = 'bab2.html';
+    alert("Bab 2 belum ditulis! Nantikan kelanjutannya ya.");
+    
+    // Batalkan efek fade jika bab 2 belum ada
+    document.body.classList.remove('fade-out');
+  }, 1000);
 }
 
 window.onload = () => {
