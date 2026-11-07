@@ -13,12 +13,29 @@
     background: #0d0d0d;
     color: #d8d8d8;
     line-height: 1.7;
-    font-size: 16px; /* Ukuran font standar untuk semua teks */
+    font-size: 16px; 
   }
-  h2 { font-weight: normal; letter-spacing: 2px; color: #888; font-size: 14px; text-transform: uppercase; margin-bottom: 24px; }
+  
+  /* Memaksa semua paragraf agar ukurannya sama persis */
+  p {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  
+  h2 { 
+    font-weight: normal; 
+    letter-spacing: 2px; 
+    color: #888; 
+    font-size: 14px; 
+    text-transform: uppercase; 
+    margin-bottom: 24px; 
+  }
+  
   .scene { display: none; }
   .scene.active { display: block; animation: fade 0.6s ease; }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  
   button {
     display: block;
     margin: 12px 0;
@@ -33,12 +50,12 @@
     font-size: 15px;
     transition: background 0.2s, border 0.2s;
   }
+  
   button:hover { background: #262626; border-color: #555; color: #fff; }
   button.done { color: #6a9a6a; border-color: #2a3a2a; }
   button.done::after { content: " ✓"; float: right; color: #6a9a6a; }
+  
   .divider { border-top: 1px solid #222; margin: 24px 0; }
-  /* Ukuran font whisper dihapus agar sama dengan teks biasa */
-  .whisper { color: #888; font-style: italic; }
 </style>
 </head>
 <body>
@@ -59,11 +76,11 @@
 <!-- ============ ADEGAN 2: TERUS LARI ============ -->
 <div id="a2" class="scene">
   <p>Lily tidak menoleh. Ia terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala.</p>
-  <p class="whisper">Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
+  <p>Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
   <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan yang tidak masuk akal. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
-  <p class="whisper">Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
+  <p>Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
   <p>Lily mendorong sekali lagi, sekuat tenaga, dan tubuh itu terhempas jatuh ke aspal. Menggunakan kesempatan ini, Lily berlari sedikit sempoyongan karena kepanikannya.</p>
-  <p class="whisper">Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
+  <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
   <button id="b-a2-a4" onclick="go('a4')">Melihat lengan yang tergores</button>
   <button id="b-a2-a5" onclick="go('a5')">Terus berlari ke arah suara sirine</button>
@@ -146,7 +163,7 @@
 <!-- ============ ADEGAN 10: SENTUH ============ -->
 <div id="a10" class="scene">
   <p>Lily mengulurkan tangan. Ujung jarinya menyentuh bagian berwarna merah itu.</p>
-  <p class="whisper">Lembab.</p>
+  <p>Lembab.</p>
   <p>Ruangan ini sudah pernah dipakai. Dan itu tidak lama dari kedatangan Lily.</p>
   <div class="divider"></div>
   <button id="b-a10-a11" onclick="go('a11')">Berteriak</button>
@@ -222,7 +239,7 @@
   <p>Ia memeriksa mata Lily, lalu nadinya, lalu mencatat sesuatu di papan klip. Lily mencoba menangkap matanya. Dokter itu tidak menoleh.</p>
   <p>"Tolong," kata Lily, suaranya serak. "Kenapa aku di sini?"</p>
   <p>Dokter itu berhenti sejenak. Lalu berkata, tanpa menoleh:</p>
-  <p class="whisper">"Kamu akan tahu."</p>
+  <p>"Kamu akan tahu."</p>
   <p>Lalu ia pergi.</p>
   <div class="divider"></div>
   <button id="b-a17-a18" onclick="go('a18')">Menunggu hasil tes darah</button>
@@ -234,7 +251,7 @@
   <p>Lalu seorang asisten datang membawa selembar hasil tes. Dokter mengambilnya, membacanya, dan menggelengkan kepala.</p>
   <p>"Darahnya normal," katanya, pelan. "Tidak ada infeksi. Tidak ada antibodi. Tidak ada apa pun."</p>
   <p>Ia menatap Lily lama. Lalu berkata kepada asistennya:</p>
-  <p class="whisper">"Periksa air liurnya."</p>
+  <p>"Periksa air liurnya."</p>
   <div class="divider"></div>
   <button id="b-a18-a19" onclick="go('a19')">Bertanya</button>
 </div>
@@ -247,7 +264,7 @@
   <p>Lily mencoba meronta. Tapi tali pengikatnya terlalu kuat.</p>
   <p>Jarum itu masuk ke lengannya. Dingin menjalar. Dunia mulai kabur.</p>
   <p>Sebelum matanya tertutup, Lily mendengar sesuatu—bukan suara dokter, bukan suara mesin. Suara seseorang di dekat telinganya, berbisik:</p>
-  <p class="whisper">"Kamu akan baik-baik saja."</p>
+  <p>"Kamu akan baik-baik saja."</p>
   <p>Lalu gelap.</p>
   <div class="divider"></div>
   <p style="color:#555; font-size:13px;">— Akhir Bab 1 —</p>
