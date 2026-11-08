@@ -18,15 +18,16 @@
     transition: background-color 1s ease, color 1s ease, opacity 1.5s ease;
   }
 
-  /* ==================== EFEK LAYAR KABUR (BLUR) ==================== */
-  /* Hanya menargetkan paragraf dan tombol di dalam halaman yang aktif */
-  .fear-blur p {
-    filter: blur(0.8px);
-    opacity: 0.9;
+  /* ==================== EFEK KEDIP BLUR (BERDENYUT) ==================== */
+  /* Animasi berlangsung selama 4 detik, berulang terus menerus */
+  .fear-blur-pulse p {
+    animation: blurPulse 4s infinite ease-in-out;
   }
-  .fear-blur button {
-    filter: blur(0.4px);
-    opacity: 0.9;
+  
+  @keyframes blurPulse {
+    0% { filter: blur(0px); opacity: 1; }
+    50% { filter: blur(1.2px); opacity: 0.85; } /* Puncak blur, tetap terbaca */
+    100% { filter: blur(0px); opacity: 1; }
   }
 
   /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
@@ -467,9 +468,9 @@ function go(id, newFear) {
     lastSafeSceneId = id;
   }
 
-  // 1. HAPUS SEMUA EFEK BLUR DARI SEMUA SCENE SEBELUM PINDAH
+  // 1. HAPUS SEMUA EFEK DARI SEMUA SCENE SEBELUM PINDAH
   document.querySelectorAll('.scene').forEach(s => {
-    s.classList.remove('fear-blur');
+    s.classList.remove('fear-blur-pulse');
     s.classList.remove('active');
   });
 
@@ -494,11 +495,11 @@ function go(id, newFear) {
     if (targetScene) targetScene.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // 2. PASANG EFEK BLUR HANYA DI SCENE YANG BARU DIBUKA
+    // 2. PASANG EFEK BLUR BERDENYUT HANYA DI SCENE YANG BARU DIBUKA
     if (targetScene) {
       let currentFear = parseInt(newFear) || 0;
       if (currentFear >= 65) {
-        targetScene.classList.add('fear-blur');
+        targetScene.classList.add('fear-blur-pulse');
       }
     }
     
@@ -575,10 +576,9 @@ function triggerGameOver(reason) {
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
     
-    // 3. HAPUS EFEK BLUR SAAT GAME OVER
     document.querySelectorAll('.scene').forEach(s => {
       s.style.display = 'none';
-      s.classList.remove('fear-blur');
+      s.classList.remove('fear-blur-pulse');
     });
     
     document.body.classList.remove('jumpscare-flash');
@@ -591,10 +591,9 @@ function retryCheckpoint() {
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
   
-  // 4. TAMPILKAN KEMBALI SCENE DAN PASTIKAN BLUR BERSIH
   document.querySelectorAll('.scene').forEach(s => {
     s.style.display = '';
-    s.classList.remove('fear-blur');
+    s.classList.remove('fear-blur-pulse');
   });
   
   go(lastSafeSceneId, parseInt(document.getElementById('fear-text').innerText));
