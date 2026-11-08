@@ -1,3 +1,12 @@
+Oke, maafkan! Efek blur 2.5px tadi memang terlalu tebal untuk layar HP, jadi teksnya malah jadi tidak terbaca. 
+
+Aku sudah mengubah logikanya menjadi **0.8px saja**. Efeknya sekarang hanya berupa getaran halus (seperti teks di atas kaca berair), tapi tetap 100% bisa dibaca dengan jelas. 
+
+Selain itu, seperti permintaanmu sebelumnya, aku juga sudah menerapkan **Transisi Kilat Putih saat masuk Flashback** dan memastikan **Flashback hanya terjadi 1 kali**.
+
+Silakan **Copy semua kode di bawah ini** dan timpa isi file `patogen48bab1.html` milikmu:
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -15,12 +24,18 @@
     line-height: 1.7;
     font-size: 16px;
     overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease, filter 0.5s ease;
+    transition: background-color 1s ease, color 1s ease, opacity 1.5s ease;
   }
 
-  /* ==================== EFEK LAYAR KABUR (BLUR) ==================== */
-  body.fear-blur {
-    filter: blur(2.5px);
+  /* ==================== EFEK LAYAR KABUR (BLUR) RINGAN ==================== */
+  .scene.fear-blur p {
+    filter: blur(0.8px); /* Diturunkan drastis agar tetap sangat mudah dibaca */
+    opacity: 0.9;
+    transition: filter 0.5s ease;
+  }
+  .scene.fear-blur button {
+    filter: blur(0.4px);
+    opacity: 0.9;
   }
 
   /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
@@ -34,6 +49,20 @@
     60% { background-color: #0d0d0d; box-shadow: none; }
     80% { background-color: #8b0000; box-shadow: inset 0 0 100px #ff0000; }
     100% { background-color: #0d0d0d; box-shadow: none; }
+  }
+
+  /* ==================== EFEK TRANSISI FLASHBACK (KILAT PUTIH) ==================== */
+  .flash-white-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #ffffff;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+  }
+  .flash-white-screen.active {
+    opacity: 1;
   }
 
   /* ==================== TOMBOL X (KELUAR) ==================== */
@@ -123,14 +152,8 @@
 
   /* ==================== LATAR FLASHBACK ==================== */
   body.flashback-bg {
-    background-color: #1a1005; /* Warna kekuningan gelap seperti terbakar */
+    background-color: #1a1005;
     color: #e0d0b0;
-    transition: background-color 1s ease, color 1s ease;
-  }
-  body.white-bg {
-    background-color: #f0f0f0; /* Latar putih untuk akhir flashback senter */
-    color: #333;
-    transition: background-color 1s ease, color 1s ease;
   }
 
   /* Teks Dasar */
@@ -156,6 +179,9 @@
 </style>
 </head>
 <body>
+
+<!-- Efek Kilat Putih untuk Transisi -->
+<div id="white-flash" class="flash-white-screen"></div>
 
 <a href="pilihchapter.html" id="btn-exit" title="Kembali ke Daftar Bab">✕</a>
 
@@ -194,7 +220,7 @@
   <button onclick="go('h1B', 70)">Berhenti untuk melihat keramaian</button>
 </div>
 
-<!-- ============ HALAMAN 1B (GAME OVER) ============ -->
+<!-- ============ HALAMAN 1B ============ -->
 <div id="h1B" class="scene" data-fear="70" data-shake="true">
   <p>Lily menoleh. Ia menghentikan langkahnya untuk melihat apa yang sedang terjadi di belakangnya.</p>
   <p>Kesalahan besar.</p>
@@ -244,7 +270,7 @@
   <p>Tubuh pria itu seketika kembali kaku. Hanya bola matanya saja yang bergerak melirik Lily.</p>
   <p>Air mata mengalir dari sana, bercampur dengan darah di wajahnya membuat kengerian yang membuat Lily merinding.</p>
   <div class="divider"></div>
-  <button onclick="triggerGameOver('Tangan pria itu yang kejang tak sengaja mencengkeram dan menggigit lengan Lily.')">Sentuh pria itu</button>
+  <button onclick="triggerGameOver('Tangan pria itu yang kejang tak sengaja mencengkeram dan menggigit leher Lily.')">Sentuh pria itu</button>
   <button onclick="go('h3', 60)">Memilih untuk mundur dan pergi</button>
 </div>
 
@@ -352,7 +378,7 @@
   <p>Gedung-gedung hancur, menimpa segalanya yang berada di bawah.</p>
   <p>"Hey! Sadar, Bangunlah! Kamu harus hidup!"</p>
   <div class="divider"></div>
-  <button onclick="go('h4', 45, 'remove-flashback')">Bangun</button>
+  <button onclick="go('h4', 45)">Bangun</button>
 </div>
 
 <!-- ============ HALAMAN 4 ============ -->
@@ -406,7 +432,8 @@
   <p>Lily tidak membuka mulut untuk bertanya. Dia pasif, tak melawan dan penasaran.</p>
   <p>Rasanya, harapan pun tak ada.</p>
   <div class="divider"></div>
-  <button onclick="go('flashback-senter', 45, 'set-flashback')">Cahaya dari senter</button>
+  <!-- Logika: Jika belum flashback, tombol ini membawa ke flashback. Jika sudah, langsung ke akhir. -->
+  <button onclick="checkAndGoFlashback()">Cahaya dari senter</button>
 </div>
 
 <!-- ============ HALAMAN FLASBACK (DARI SENTER) ============ -->
@@ -443,33 +470,51 @@
 <script>
 let policeInterval;
 let lastSafeSceneId = 'h1';
-let lastSafeFear = 10;
+let hasFlashedBack = false; // Variabel untuk melacak apakah sudah flashback
 
-function go(id, newFear, action) {
+function go(id, newFear) {
   // Simpan posisi aman (jika bukan Game Over)
   if (id !== 'h1B' && id !== 'h2D' && !id.includes('consequence')) {
     lastSafeSceneId = id;
   }
 
-  // Cek transisi khusus
-  if (action === 'remove-flashback') {
-    document.body.classList.remove('flashback-bg');
-  }
-  if (action === 'set-flashback') {
-    // (Kita tidak set background di sini, karena kita mau langsung ke flashback-senter)
-  }
-
-  // Atur Background khusus
+  // Logika Transisi Kilat Putih
   if (id.includes('flashback')) {
-    document.body.classList.add('flashback-bg');
+    hasFlashedBack = true;
+    const whiteFlash = document.getElementById('white-flash');
+    whiteFlash.classList.add('active');
+    
+    setTimeout(() => {
+      document.body.classList.add('flashback-bg');
+      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Matikan kilatan putih setelah masuk ke halaman flashback
+      setTimeout(() => {
+        whiteFlash.classList.remove('active');
+      }, 100);
+    }, 800); // Waktu tunggu kilatan putih
+    
   } else {
-    document.body.classList.remove('flashback-bg', 'white-bg');
+    // Transisi normal (tanpa kilat)
+    if (!id.includes('flashback')) {
+      document.body.classList.remove('flashback-bg');
+    }
+    
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    const targetScene = document.getElementById(id);
+    if (targetScene) targetScene.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Update efek berdasarkan scene baru
+    updateEffects(id, newFear);
   }
+}
 
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+function updateEffects(id, newFear) {
   const targetScene = document.getElementById(id);
-  if (targetScene) targetScene.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (!targetScene) return;
 
   // Tandai tombol
   document.querySelectorAll('button[onclick*="go(\'' + id + '\'"]').forEach(btn => {
@@ -477,61 +522,69 @@ function go(id, newFear, action) {
   });
 
   // EFEK GETARAN (Hanya jika data-shake="true" di HTML)
-  if (targetScene && targetScene.dataset.shake === 'true') {
+  if (targetScene.dataset.shake === 'true') {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), 500); 
   }
 
   // LOGIKA METER KETAKUTAN & BLUR
-  if (targetScene) {
-    let currentFear = parseInt(newFear) || 0;
-    let prevFear = parseInt(document.getElementById('fear-text').innerText) || 0;
-    
-    // Update Bar
-    const fearBar = document.getElementById('fear-bar');
-    const fearText = document.getElementById('fear-text');
-    const fearPanel = document.getElementById('fear-panel');
+  let currentFear = parseInt(newFear) || 0;
+  const fearBar = document.getElementById('fear-bar');
+  const fearText = document.getElementById('fear-text');
+  const fearPanel = document.getElementById('fear-panel');
 
-    fearBar.style.width = currentFear + '%';
-    fearText.innerText = currentFear + '%';
-    
-    // Warna Bar
-    if (currentFear < 40) {
-      fearBar.style.background = '#4a5d4a'; 
-      fearPanel.classList.remove('high');
-    } else if (currentFear < 80) {
-      fearBar.style.background = '#b58b00'; 
-      fearPanel.classList.remove('high');
-    } else {
-      fearBar.style.background = '#ff3333'; 
-      fearPanel.classList.add('high'); 
-    }
+  fearBar.style.width = currentFear + '%';
+  fearText.innerText = currentFear + '%';
+  
+  // Warna Bar
+  if (currentFear < 40) {
+    fearBar.style.background = '#4a5d4a'; 
+    fearPanel.classList.remove('high');
+  } else if (currentFear < 80) {
+    fearBar.style.background = '#b58b00'; 
+    fearPanel.classList.remove('high');
+  } else {
+    fearBar.style.background = '#ff3333'; 
+    fearPanel.classList.add('high'); 
+  }
 
-    // EFEK BLUR JIKA > 65%
-    if (currentFear >= 65) {
-      document.body.classList.add('fear-blur');
-    } else {
-      document.body.classList.remove('fear-blur');
-    }
+  // EFEK BLUR JIKA > 65%
+  if (currentFear >= 65) {
+    targetScene.classList.add('fear-blur');
+  } else {
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
+  }
 
-    // LOGIKA LAMPU POLISI
-    clearInterval(policeInterval);
-    document.body.classList.remove('police-blue', 'police-red');
+  // LOGIKA LAMPU POLISI
+  clearInterval(policeInterval);
+  document.body.classList.remove('police-blue', 'police-red');
 
-    if (targetScene.dataset.police === 'true') {
-      let isBlue = true;
-      document.body.classList.add('police-blue');
-      policeInterval = setInterval(() => {
-        if (isBlue) {
-          document.body.classList.remove('police-blue');
-          document.body.classList.add('police-red');
-        } else {
-          document.body.classList.remove('police-red');
-          document.body.classList.add('police-blue');
-        }
-        isBlue = !isBlue;
-      }, 800); 
-    }
+  if (targetScene.dataset.police === 'true') {
+    let isBlue = true;
+    document.body.classList.add('police-blue');
+    policeInterval = setInterval(() => {
+      if (isBlue) {
+        document.body.classList.remove('police-blue');
+        document.body.classList.add('police-red');
+      } else {
+        document.body.classList.remove('police-red');
+        document.body.classList.add('police-blue');
+      }
+      isBlue = !isBlue;
+    }, 800); 
+  }
+}
+
+// ==================== FUNGSI KHUSUS ====================
+
+// Cek apakah sudah pernah flashback atau belum
+function checkAndGoFlashback() {
+  if (hasFlashedBack) {
+    // Jika sudah pernah, langsung ke ending
+    triggerBlackEnding();
+  } else {
+    // Jika belum, masuk ke flashback
+    go('flashback-senter', 45);
   }
 }
 
@@ -549,7 +602,6 @@ function triggerGameOver(reason) {
     
     document.body.classList.remove('jumpscare-flash');
     document.body.classList.remove('shake');
-    // Hapus blur saat game over
     document.body.classList.remove('fear-blur');
   }, 800); 
 }
@@ -559,42 +611,51 @@ function retryCheckpoint() {
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
   document.querySelectorAll('.scene').forEach(s => s.style.display = '');
-  // Kembalikan blur jika memang ketakutannya tinggi
-  if (parseInt(document.getElementById('fear-text').innerText) >= 65) {
-    document.body.classList.add('fear-blur');
-  }
   go(lastSafeSceneId, parseInt(document.getElementById('fear-text').innerText));
 }
 
 // ==================== FUNGSI AKHIR BAB ====================
 function triggerBlackEnding() {
-  document.querySelector('#h6 button').style.display = 'none';
-  document.body.classList.add('fade-out');
-
-  setTimeout(() => {
-    document.body.classList.remove('fade-out');
-    document.body.style.backgroundColor = '#000'; // Hitam total
-    document.getElementById('end-screen').style.display = 'block';
-    document.getElementById('fear-panel').style.display = 'none';
-    document.querySelector('h2').style.display = 'none';
-    document.getElementById('h6').style.display = 'none';
-    document.getElementById('end-screen').style.color = '#888';
-  }, 1600);
-}
-
-function triggerWhiteEnding() {
-  document.querySelector('#flashback-senter button').style.display = 'none';
+  // Sembunyikan tombol di halaman terakhir yang aktif
+  const activeBtn = document.querySelector('.scene.active button');
+  if (activeBtn) activeBtn.style.display = 'none';
+  
   document.body.classList.add('fade-out');
 
   setTimeout(() => {
     document.body.classList.remove('fade-out', 'flashback-bg');
-    document.body.style.backgroundColor = '#f0f0f0'; // Putih
-    document.body.style.color = '#333'; // Teks gelap
+    document.body.style.backgroundColor = '#000';
+    document.body.style.color = '#d8d8d8';
     
     document.getElementById('end-screen').style.display = 'block';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
-    document.getElementById('flashback-senter').style.display = 'none';
+    document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
+    
+    // Reset warna tombol
+    const btns = document.querySelectorAll('#end-screen button, #end-screen a');
+    btns.forEach(b => {
+      b.style.color = '#ccc';
+      b.style.borderColor = '#444';
+    });
+  }, 1600);
+}
+
+function triggerWhiteEnding() {
+  const activeBtn = document.querySelector('#flashback-senter button');
+  if (activeBtn) activeBtn.style.display = 'none';
+  
+  document.body.classList.add('fade-out');
+
+  setTimeout(() => {
+    document.body.classList.remove('fade-out', 'flashback-bg');
+    document.body.style.backgroundColor = '#f0f0f0';
+    document.body.style.color = '#333';
+    
+    document.getElementById('end-screen').style.display = 'block';
+    document.getElementById('fear-panel').style.display = 'none';
+    document.querySelector('h2').style.display = 'none';
+    document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
     
     // Sesuaikan warna tombol di layar putih
     const btns = document.querySelectorAll('#end-screen button, #end-screen a');
@@ -624,3 +685,4 @@ window.onload = () => {
 
 </body>
 </html>
+```
