@@ -15,7 +15,12 @@
     line-height: 1.7;
     font-size: 16px;
     overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease;
+    transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease, filter 0.5s ease;
+  }
+
+  /* ==================== EFEK LAYAR KABUR (BLUR) ==================== */
+  body.fear-blur {
+    filter: blur(2.5px);
   }
 
   /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
@@ -47,9 +52,6 @@
   body.police-blue { background-color: #051021; box-shadow: inset 0 0 100px rgba(0, 100, 255, 0.2); }
   body.police-red { background-color: #1a0505; box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2); }
 
-  /* ==================== EFEK MEMUDAR (FADE OUT) ==================== */
-  body.fade-out { opacity: 0; }
-
   /* ==================== LAYAR GAME OVER ==================== */
   #game-over-screen {
     display: none;
@@ -62,13 +64,9 @@
     justify-content: center;
   }
   #game-over-screen h1 {
-    font-size: 60px;
-    color: #ff0000;
-    letter-spacing: 15px;
-    font-weight: bold;
-    text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-    animation: bloodPulse 0.2s infinite alternate;
-    margin-bottom: 20px;
+    font-size: 60px; color: #ff0000; letter-spacing: 15px;
+    font-weight: bold; text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+    animation: bloodPulse 0.2s infinite alternate; margin-bottom: 20px;
   }
   #game-over-screen p { color: #888; margin-bottom: 40px; text-align: center; padding: 0 20px; }
   #game-over-screen button {
@@ -115,12 +113,24 @@
   @keyframes pulsePanel { from { box-shadow: 0 0 5px rgba(255, 0, 0, 0.2); } to { box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); } }
 
   /* ==================== EFEK GETARAN LAYAR ==================== */
-  .shake { animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
+  .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
   @keyframes shake {
     10%, 90% { transform: translate3d(-4px, 0, 0); }
     20%, 80% { transform: translate3d(6px, 0, 0); }
     30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
     40%, 60% { transform: translate3d(8px, 0, 0); }
+  }
+
+  /* ==================== LATAR FLASHBACK ==================== */
+  body.flashback-bg {
+    background-color: #1a1005; /* Warna kekuningan gelap seperti terbakar */
+    color: #e0d0b0;
+    transition: background-color 1s ease, color 1s ease;
+  }
+  body.white-bg {
+    background-color: #f0f0f0; /* Latar putih untuk akhir flashback senter */
+    color: #333;
+    transition: background-color 1s ease, color 1s ease;
   }
 
   /* Teks Dasar */
@@ -152,7 +162,7 @@
 <!-- Layar Game Over -->
 <div id="game-over-screen">
   <h1>GAME OVER</h1>
-  <p id="game-over-text">Teriakan Lily memudar... <br>Kegelapan menelannya.</p>
+  <p id="game-over-text">Kegelapan menelannya.</p>
   <button onclick="retryCheckpoint()">Coba Lagi dari Pilihan Terakhir</button>
 </div>
 
@@ -173,248 +183,287 @@
 
 <h2>Bab 1 — Apa Yang Terjadi?</h2>
 
-<!-- ============ ADEGAN 1 ============ -->
-<div id="a1" class="scene active" data-fear="10">
+<!-- ============ HALAMAN 1 ============ -->
+<div id="h1" class="scene active" data-fear="10">
   <p>Lily tidak tahu apa yang sedang terjadi. Tidak ada yang tahu.</p>
   <p>Jalanan ramai. Terlalu ramai. Orang-orang berlarian ke segala arah, sebagian menangis, sebagian merekam dengan ponsel, sebagian lagi—entah bodoh atau berani—maju menghadapi sesuatu yang tidak mereka pahami.</p>
   <p>Di ujung jalan, lebih dari satu orang berteriak. Teriakan terburuk yang pernah ia dengar.</p>
   <p>Lily berlari. Terus berlari. Bukan karena ia tahu harus ke mana. Hanya saja, berdiri diam terasa seperti pilihan yang salah.</p>
   <div class="divider"></div>
-  <button onclick="go('a2')">Terus berlari, tanpa menoleh</button>
-  <button onclick="go('a3_consequence')">Menoleh sebentar, melihat keramaian</button>
+  <button onclick="go('h2', 50)">Terus berlari, tanpa menoleh</button>
+  <button onclick="go('h1B', 70)">Berhenti untuk melihat keramaian</button>
 </div>
 
-<!-- ============ ADEGAN KONSEKUENSI 1 ============ -->
-<div id="a3_consequence" class="scene" data-fear="80" data-shake="true">
+<!-- ============ HALAMAN 1B (GAME OVER) ============ -->
+<div id="h1B" class="scene" data-fear="70" data-shake="true">
   <p>Lily menoleh. Ia menghentikan langkahnya untuk melihat apa yang sedang terjadi di belakangnya.</p>
   <p>Kesalahan besar.</p>
-  <p>Kerumunan orang panik itu berlari ke arahnya. Seseorang menabraknya keras dari depan. Tubuh Lily terpental ke aspal.</p>
+  <p>Kerumunan orang panik itu berlari ke arahnya. Seseorang menabraknya keras dari depan. Dua orang. Tiga orang. Tubuh Lily terpental ke aspal.</p>
   <p>Sebelum ia bisa bangkit, tubuh-tubuh lain menginjaknya. Sepatu, lutut, dan beban massa yang histeris menghantam wajah dan dadanya. Lily mencoba berteriak, tapi suaranya tenggelam.</p>
   <div class="divider"></div>
   <button onclick="triggerGameOver('Tulang rusuk Lily remuk diinjak massa yang panik.')">Gelap...</button>
 </div>
 
-<!-- ============ ADEGAN 2 ============ -->
-<div id="a2" class="scene" data-fear="40" data-shake="true">
-  <p>Lily terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala. Tangannya masih perih, tapi ia mengabaikannya.</p>
-  <p>Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
-  <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan yang tidak masuk akal. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
-  <p>Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
-  <p>Lily mendorong sekali lagi, sekuat tenaga, dan tubuh itu terhempas jatuh ke aspal. Menggunakan kesempatan ini, Lily berlari sedikit sempoyongan karena kepanikannya.</p>
-  <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
+<!-- ============ HALAMAN 2 ============ -->
+<div id="h2" class="scene" data-fear="50" data-shake="true">
+  <p>Lily terus berlari, melewati badan-badan yang terbaring, melewati massa yang terduduk di trotoar sambil memeluk lututnya, melewati kendaraan yang ditinggal dengan mesin menyala.</p>
+  <p>Lalu, seseorang menabrak Lily dari samping. Tubuhnya menghantam dinding toko. Telinganya berdenging.</p>
+  <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
+  <p>Gigi berdarah itu menyentuh lengan Lily. Cukup dalam untuk merobek lengan seragam dan menggores kulitnya.</p>
+  <p>Lily mendorong sekali lagi, sekuat tenaga, dan akhirnya tubuh itu terhempas jatuh ke aspal. Menggunakan kesempatan ini, Lily berlari sedikit sempoyongan karena kepanikannya.</p>
+  <p>Tak jauh dari sana, ia mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
-  <button onclick="go('a4')">Melihat lengan yang tergores</button>
-  <button onclick="go('a5_consequence')">Terus berlari tanpa memedulikan luka</button>
+  <button onclick="go('h2B', 45)">Berhenti sejenak melihat luka di lengan</button>
+  <button onclick="go('h3', 40)">Berlari terus ke arah suara sirine</button>
 </div>
 
-<!-- ============ ADEGAN KONSEKUENSI 2 ============ -->
-<div id="a5_consequence" class="scene" data-fear="85" data-shake="true">
-  <p>Lily mengabaikan lengan dan tangannya yang berdarah. Ia terus berlari menembus kerumunan.</p>
-  <p>Namun tubuhnya sudah lelah. Darah yang mengalir deras membuat pandangannya berkunang-kunang. Ia tersandung kakinya sendiri dan jatuh berguling di aspal yang kasar.</p>
-  <p>Lily mencoba berdiri, namun kakinya lemas. Di saat yang sama, seseorang yang terjangkiti berjalan kaku ke arahnya dan menubruk tubuhnya yang tak berdaya.</p>
+<!-- ============ HALAMAN 2B ============ -->
+<div id="h2B" class="scene" data-fear="45">
+  <p>Lily melihat lengannya. Ada goresan gigi—tipis, merah, dan darah mengalir pelan dari lukanya. Tangannya juga lecet akibat terhempas. Lily menyentuh lukanya dengan jari. Perih.</p>
+  <p>Ia tidak punya air untuk membasuh. Ia tidak punya apa pun. Jadi Lily hanya menekan lengannya dengan telapak tangan. Lalu, seorang pria dengan kemeja putih berlumur darah berlari keluar dari sebuah bangunan. Lily melihatnya, sedikit bersembunyi di balik mobil yang terparkir.</p>
   <div class="divider"></div>
-  <button onclick="triggerGameOver('Kehabisan darah membuat tubuh Lily lumpuh, dan ia tak bisa melarikan diri.')">Gelap...</button>
+  <button onclick="go('h2C', 50)">Tetap sembunyi dan memperhatikan pria itu</button>
+  <button onclick="go('h3', 40)">Berlari ke suara sirine</button>
 </div>
 
-<!-- ============ ADEGAN 4 ============ -->
-<div id="a4" class="scene" data-fear="35" data-police="true">
-  <p>Lily melihat lengan dan tangannya. Ada goresan gigi—tipis, merah, dan darah mengalir pelan dari lukanya. Tangannya juga lecet akibat terjatuh. Ia menyentuhnya dengan jari. Perih terasa.</p>
-  <p>Ia tidak punya air untuk membasuh. Ia tidak punya apa pun. Jadi ia hanya menekan lengannya dengan telapak tangan, lalu berlari lagi.</p>
-  <p>Di kejauhan, ia melihat lampu biru. Polisi.</p>
+<!-- ============ HALAMAN 2C ============ -->
+<div id="h2C" class="scene" data-fear="50" data-shake="true">
+  <p>Lily memilih untuk berdiam dulu sejenak. Memperhatikan pria itu yang kini bersandar di dinding toko. Napasnya tersengal. Begitu banyak luka di tangan dan kakinya.</p>
+  <p>Tangannya yang kotor ternoda menekan luka di kakinya, mencoba menahan pendarahan terparah.</p>
+  <p>Namun, di detik selanjutnya tubuh pria itu kaku sejenak, disusul kejang-kejang yang membuatnya bergerak tidak terkendali.</p>
   <div class="divider"></div>
-  <button onclick="go('a5')">Berlari ke arah polisi</button>
+  <button onclick="go('h2D', 60)">Lily mencoba menolong pria itu</button>
+  <button onclick="go('h3', 65)">Takut. Lily pun meninggalkan pria itu dan berlari ke arah sirine</button>
 </div>
 
-<!-- ============ ADEGAN 5 ============ -->
-<div id="a5" class="scene" data-fear="45" data-police="true">
-  <p>Lily mendekati polisi. Ia mengangkat tangannya, berteriak minta tolong. Untuk sesaat, ia merasa lega—polisi itu melihatnya, mengangguk, mengangkat tangannya seolah akan menolong.</p>
-  <p>Lalu tangan itu mencengkeram lengan Lily. Kuat dan kasar.</p>
+<!-- ============ HALAMAN 2D ============ -->
+<div id="h2D" class="scene" data-fear="60">
+  <p>Memberanikan diri, Lily beranjak dari tempat sembunyinya dan menghampiri pria itu.</p>
+  <p>Tubuhnya berguling-guling di atas debu, rahang yang kaku membuat mulutnya terbuka kaku memamerkan gigi.</p>
+  <p>Lily mendekatkan diri, mencoba meraih tubuh pria itu. "Pak, kamu tidak apa-apa?"</p>
+  <p>Tubuh pria itu seketika kembali kaku. Hanya bola matanya saja yang bergerak melirik Lily.</p>
+  <p>Air mata mengalir dari sana, bercampur dengan darah di wajahnya membuat kengerian yang membuat Lily merinding.</p>
+  <div class="divider"></div>
+  <button onclick="triggerGameOver('Tangan pria itu yang kejang tak sengaja mencengkeram dan menggigit lengan Lily.')">Sentuh pria itu</button>
+  <button onclick="go('h3', 60)">Memilih untuk mundur dan pergi</button>
+</div>
+
+<!-- ============ HALAMAN 3 ============ -->
+<div id="h3" class="scene" data-fear="60" data-police="true">
+  <p>Di kejauhan, Lily melihat lampu biru dan merah. Polisi.</p>
+  <p>Sirine yang tadi pun semakin jelas ia dengar. Lily mendekati polisi. Ia mengangkat tangannya, melambaikan tangan sambil berteriak minta tolong. Untuk sesaat, ia merasa lega—polisi itu melihatnya, mengangguk, dan mengangkat tangannya seolah akan menolong.</p>
+  <p>Lalu, tangan itu mencengkeram lengan Lily. Namun kuat dan kasar.</p>
   <p>"Jangan bergerak," perintah polisi itu. Ucapan itu bukan seperti suara orang yang menyelamatkan.</p>
-  <p>Lily semakin panik dan membuka mulut untuk bertanya. Tapi polisi itu sudah menekan radionya dan berkata sesuatu yang tidak ia dengar.</p>
-  <p>Lily diseret paksa. Ia dibawa menuju mobil besar yang biasa digunakan untuk membawa kriminal. Di dekatnya, ada orang lain—seorang pria tua, seorang wanita muda, juga seorang remaja yang menangis. Mereka juga ditangkap. Mereka juga diseret. Namun, tidak ada yang menjelaskan apa pun.</p>
+  <p>Lily jadi panik dan kebingungan.</p>
+  <p>Ia diseret paksa. Dibawa menuju mobil besar yang biasa digunakan untuk membawa kriminal. Di dekatnya, ada orang lain—seorang pria tua, seorang wanita muda, juga seorang remaja yang menangis. Mereka juga ditangkap. Mereka juga diseret. Namun, tidak ada yang menjelaskan apa pun.</p>
   <div class="divider"></div>
-  <button onclick="go('a6')">Melihat ke arah orang-orang lain yang ditangkap</button>
-  <button onclick="go('a7')">Memberontak dan mencoba bertanya</button>
+  <button onclick="go('h3A', 60)">Melihat ke arah orang-orang lain yang ditangkap</button>
+  <button onclick="go('h3B', 60)">Memberontak dan mencoba bertanya</button>
 </div>
 
-<!-- ============ ADEGAN 6 ============ -->
-<div id="a6" class="scene" data-fear="45">
+<!-- ============ HALAMAN 3A ============ -->
+<div id="h3A" class="scene" data-fear="60">
   <p>Wanita muda di sebelahnya menangis tanpa suara. Pria tua itu diam, matanya kosong. Remaja yang di depannya terus berkata, "Aku tidak melakukan apa-apa, aku tidak melakukan apa-apa," seperti mantra.</p>
   <p>Lily melihat lengan wanita muda itu. Ada bekas gigitan. Sama seperti lengannya.</p>
   <p>Lalu ia melihat lengan pria tua itu. Tidak ada bekas gigitan. Tapi ia juga ditangkap.</p>
   <p>Lily tidak mengerti. Ia tidak mengerti apa pun.</p>
   <div class="divider"></div>
-  <button onclick="go('a7')">Mencoba bertanya pada polisi</button>
+  <button onclick="go('h3B', 60)">Mencoba bertanya</button>
 </div>
 
-<!-- ============ ADEGAN 7 ============ -->
-<div id="a7" class="scene" data-fear="55" data-shake="true">
+<!-- ============ HALAMAN 3B ============ -->
+<div id="h3B" class="scene" data-fear="60">
   <p>"Kenapa? Kenapa aku ditangkap? Harusnya kalian menangkap orang-orang gila itu!"</p>
   <p>Polisi itu tidak menoleh. Ia terus berjalan, menyeret Lily dan yang lainnya seperti menyeret tas masuk ke dalam mobil.</p>
   <p>Sebuah borgol dikaitkan pada kedua tangan Lily. Matanya ditutup dengan kain hingga ia tak tahu keadaan di dalam mobil tersebut. Yang bisa ia dengar hanya suara tangisan dan teriakan.</p>
-  <p>Mesin mobil menyala. Lalu bergerak menuju entah ke mana.</p>
-  <p>Lily hanya diam. Bukan karena patuh atau merasa aman, melainkan takut. Ia takut polisi itu akan melakukan sesuatu jika ia memberontak.</p>
+  <p>Mesin mobil menyala. Sepertinya akan membawa mereka pergi menuju entah ke mana.</p>
   <div class="divider"></div>
-  <button onclick="go('a8')">Diam dalam kelelahan</button>
+  <button onclick="go('h3D', 35)">Diam dan menenangkan diri</button>
+  <button onclick="go('h3C', 85)">Mencoba melawan dan kabur</button>
 </div>
 
-<!-- ============ ADEGAN 8 ============ -->
-<div id="a8" class="scene" data-fear="65">
+<!-- ============ HALAMAN 3C ============ -->
+<div id="h3C" class="scene" data-fear="85" data-shake="true">
+  <p>Lily memaksa berdiri. Dengan tangan yang diborgol dan mata yang tertutup, ia berusaha melompat keluar dari dalam mobil.</p>
+  <p>Ia sempat tersungkur di aspal. Dahinya tergores parah membuat ia menjerit kesakitan.</p>
+  <p>Sekuat tenaga Lily mencoba bangkit dengan keadaannya yang mengenaskan. Namun saat ia hampir saja berhasil berdiri, sebuah sengatan menyentuh pinggangnya.</p>
+  <p>Lily kembali menjerit. Tubuhnya disetrum hingga tak sadarkan diri.</p>
+  <div class="divider"></div>
+  <button onclick="go('h4', 45)">Tak sadarkan diri</button>
+</div>
+
+<!-- ============ HALAMAN 3D ============ -->
+<div id="h3D" class="scene" data-fear="35">
   <p>Dua jam. Mungkin lebih. Lily tidak bisa menghitung. Mobil itu terus bergerak, dan teriakan di sekitarnya sudah redup—hanya tersisa isak tangis dan doa permohonan.</p>
   <p>Lalu mobil akhirnya berhenti. Lily dan lainnya yang masih kebingungan dibawa turun dengan mata yang masih tertutup. Mereka diseret melewati lorong panjang. Lily tidak bisa melihat apa pun. Yang ia dengar pun sama: permintaan tolong dan jeritan.</p>
   <p>Lalu, sebuah pintu berat terbuka. Polisi itu membuka borgol di tangan Lily dan mendorongnya masuk dengan kasar hingga ia tersungkur di lantai itu.</p>
   <p>Pintu pun ditutup.</p>
   <div class="divider"></div>
-  <button onclick="go('a9')">Membuka penutup mata</button>
+  <button onclick="go('h3E', 45)">Membuka penutup matanya</button>
 </div>
 
-<!-- ============ ADEGAN 9 ============ -->
-<div id="a9" class="scene" data-fear="70">
-  <p>Ruangan itu tidak besar, tidak kecil. Cukup untuk berbaring, tidak cukup untuk berjalan. Lantainya beton. Tidak ada kasur. Tidak ada jendela. Satu lampu di langit-langit, redup, berkedip pelan.</p>
+<!-- ============ HALAMAN 3E ============ -->
+<div id="h3E" class="scene" data-fear="45">
+  <p>Ruangan itu tidak besar, tidak kecil. Cukup untuk berbaring. Lantainya beton. Tidak ada kasur. Tidak ada jendela. Satu lampu di langit-langit, redup, berkedip pelan.</p>
   <p>Dinding-dindingnya penuh goresan. Bukan goresan yang rapi, seperti dibuat saat ketakutan.</p>
-  <p>Dan di salah satu dinding di sebelah kanannya, tepat berada sejajar dengan tinggi badan, ada bekas sesuatu yang berwarna merah:</p>
+  <p>Dan di salah satu dinding di sebelah kanannya, tepat berada sejajar dengan tinggi badan, ada bekas sesuatu yang berwarna merah.</p>
   <p>Lily pun menelan ludah ketakutan saat menyadari bekas apa itu.</p>
   <div class="divider"></div>
-  <button onclick="go('a10')">Menyentuh bekas itu</button>
-  <button onclick="go('a11_consequence')">Berteriak histeris</button>
-  <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
+  <button onclick="go('h3G', 45)">Berdiri dan menyentuh bekas merah itu</button>
+  <button onclick="go('h3H', 45)">Duduk di sudut, memeluk lutut</button>
+  <button onclick="go('h3F', 65)">Berteriak histeris</button>
 </div>
 
-<!-- ============ ADEGAN KONSEKUENSI 3 ============ -->
-<div id="a11_consequence" class="scene" data-fear="100" data-shake="true">
-  <p>"LEPASKAN AKU! KALIAN GILA!"</p>
-  <p>Lily berteriak sekuat tenaga. Tenggorokannya terkoyak, suaranya memantul di dinding beton. Ia berteriak tanpa henti, memukul-mukul dinding dengan tangannya yang masih lecet hingga kulitnya terkelupas dan berdarah.</p>
-  <p>Karena terlalu banyak berteriak dan menangis, tenggorokan Lily membengkak parah. Napasnya tersengal. Ia mulai tersedak ludahnya sendiri. Tubuhnya kejang hebat, lalu ia jatuh menghantam lantai beton dengan kepala lebih dulu.</p>
+<!-- ============ HALAMAN 3F ============ -->
+<div id="h3F" class="scene" data-fear="65">
+  <p>"LEPASKAN AKU! TOLONG!"</p>
+  <p>Lily berteriak sekuat tenaga. Terus menjerit dan meminta tolong hingga tenggorokannya terkoyak. Namun, suaranya hanya memantul di dinding beton. Ia terus berteriak tanpa henti, memukul-mukul dinding dengan tangannya yang masih lecet hingga kulitnya terkelupas dan berdarah.</p>
+  <p>Karena terlalu banyak berteriak dan menangis, tenggorokan Lily membengkak parah. Ia lemas dan jatuh tak sadarkan diri.</p>
   <div class="divider"></div>
-  <button onclick="triggerGameOver('Tenggorokan Lily robek karena teriakan, dan benturan di kepalanya merenggut nyawanya.')">Gelap...</button>
+  <button onclick="go('h4', 45)">Tak sadarkan diri</button>
 </div>
 
-<!-- ============ ADEGAN 10 ============ -->
-<div id="a10" class="scene" data-fear="75" data-shake="true">
+<!-- ============ HALAMAN 3G ============ -->
+<div id="h3G" class="scene" data-fear="45">
   <p>Lily mengulurkan tangan. Ujung jarinya menyentuh bagian berwarna merah itu.</p>
   <p>Lembab.</p>
   <p>Ruangan ini sudah pernah dipakai. Dan itu tidak lama dari kedatangan Lily.</p>
   <div class="divider"></div>
-  <button onclick="go('a11')">Berteriak</button>
-  <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
+  <button onclick="go('h3H', 40)">Duduk di sudut dan memeluk lutut</button>
 </div>
 
-<!-- ============ ADEGAN 11 ============ -->
-<div id="a11" class="scene" data-fear="85" data-shake="true">
-  <p>"LEPASKAN AKU!"</p>
-  <p>Suara Lily memantul di dinding beton. Tidak ada jawaban. Tidak ada langkah kaki. Tidak ada apa pun yang merespon teriakannya.</p>
-  <p>Ia berteriak lagi. Dan lagi.</p>
-  <p>Tenggorokannya mulai perih. Suaranya pecah. Tapi ia terus berteriak sampai yang keluar hanya suara serak, seperti sesuatu yang tersangkut di kerongkongannya.</p>
-  <p>Lalu tubuhnya menyerah. Ia jatuh ke lantai beton, dan dunia menjadi gelap.</p>
+<!-- ============ HALAMAN 3H ============ -->
+<div id="h3H" class="scene" data-fear="40">
+  <p>Lily beranjak pelan sedikit tertatih ke sudut terjauh dari pintu. Di sana, ia duduk dan memeluk lututnya.</p>
+  <p>Di sudut itu, Lily pun memejamkan matanya. Ia lelah, terlalu lelah hingga akhirnya tertidur.</p>
   <div class="divider"></div>
-  <button onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
+  <button onclick="go('flashback', 40)">Tertidur sejenak</button>
 </div>
 
-<!-- ============ ADEGAN 12 ============ -->
-<div id="a12" class="scene" data-fear="70">
-  <p>Lily merangkak ke sudut terjauh dari pintu. Di sana, ia memeluk lututnya.</p>
-  <p>Di sudut itu, ia menemukan sesuatu: bekas tapak tangan di dinding. Kecil. Jauh lebih kecil dari tangannya.</p>
-  <p>Lily pun memejamkan matanya. Ia lelah, lalu tertidur tanpa sadar.</p>
+<!-- ============ HALAMAN FLASBACK (DARI TIDUR) ============ -->
+<div id="flashback" class="scene" data-fear="40" data-flashback="true">
+  <p>"Kamu akan baik-baik saja! Bertahanlah!"</p>
+  <p>Samar.</p>
+  <p>Tidak jelas untuk diingat.</p>
+  <p>Seorang wanita berambut sebahu memegang tubuh kecil Lily yang lemah.</p>
+  <p>Langit tampak kusam. Asap merajalela di udara.</p>
+  <p>Lily menolehkan kepalanya dalam pelukan. Api.</p>
+  <p>Di sekelilingnya semuanya terbakar habis.</p>
+  <p>Gedung-gedung hancur, menimpa segalanya yang berada di bawah.</p>
+  <p>"Hey! Sadar, Bangunlah! Kamu harus hidup!"</p>
   <div class="divider"></div>
-  <button onclick="go('a13')">Terbangun saat pintu besi terbuka</button>
+  <button onclick="go('h4', 45, 'remove-flashback')">Bangun</button>
 </div>
 
-<!-- ============ ADEGAN 13 ============ -->
-<div id="a13" class="scene" data-fear="75" data-shake="true">
-  <p>Pintu besi itu terbuka dengan suara berat.</p>
+<!-- ============ HALAMAN 4 ============ -->
+<div id="h4" class="scene" data-fear="45">
+  <p>Suara berat pintu besi terbuka.</p>
   <p>Lily terkejut dan terbangun. Kepalanya pusing. Ia mencoba berdiri, tapi dua orang sudah ada di sisinya—satu memegang lengan kiri, satu memegang lengan kanan. Tidak kasar, tapi tidak bisa dilawan.</p>
-  <p>Ia dibawa keluar. Lorong itu panjang, lampunya putih, dan tidak ada satu pun orang yang menatapnya.</p>
+  <p>Ia dibawa keluar. Berjalan melalui sebuah lorong. Lorong itu panjang, lampunya putih, dan tidak ada satu pun bayangan yang terlihat.</p>
   <p>Ia bertanya. Suaranya serak, hampir tidak terdengar. "Ke mana? Kenapa? Apa salahku?"</p>
   <p>Tidak ada yang menjawab.</p>
   <div class="divider"></div>
-  <button onclick="go('a14')">Melihat ke lorong saat dibawa</button>
-  <button onclick="go('a15')">Terus bertanya sambil berjalan</button>
+  <button onclick="go('h5', 45)">Pasrah mengikuti</button>
 </div>
 
-<!-- ============ ADEGAN 14 ============ -->
-<div id="a14" class="scene" data-fear="75">
-  <p>Lorong itu bercabang. Di setiap cabang, ada pintu besi seperti pintu selnya. Beberapa tertutup. Beberapa sedikit terbuka.</p>
-  <p>Dari salah satu pintu yang terbuka, Lily melihat sekilas: sebuah ruangan dengan kasur tipis, dinding putih, dan seseorang duduk di sudut. Tidak bergerak. Tidak menoleh.</p>
-  <p>Lalu ia melewatinya.</p>
-  <div class="divider"></div>
-  <button onclick="go('a15')">Terus bertanya sambil berjalan</button>
-</div>
-
-<!-- ============ ADEGAN 15 ============ -->
-<div id="a15" class="scene" data-fear="80">
-  <p>Pintu terakhir terbuka, dan Lily masuk ke ruangan yang terang.</p>
-  <p>Laboratorium. Orang-orang berbaju APD tertutup bergerak cepat, tanpa suara, dan kondusif seperti robot. Monitor menyala. Mesin berdengung. Tidak ada yang menoleh ke arahnya.</p>
+<!-- ============ HALAMAN 5 ============ -->
+<div id="h5" class="scene" data-fear="45">
+  <p>Dua pintu besar di ujung lorong terbuka, dan Lily masuk ke ruangan yang lebih terang.</p>
+  <p>Laboratorium. </p>
+  <p>Orang-orang berbaju APD tertutup bergerak cepat, tanpa suara, dan kondusif seperti robot. Monitor menyala. Mesin berdengung. Tidak ada yang menoleh ke arahnya.</p>
   <p>Di tengah ruangan, ada empat kursi periksa. Dua orang duduk terikat di sana. Mereka tidak bergerak. Mata mereka terbuka, tapi tidak melihat apa pun.</p>
   <p>Lily dibawa ke kursi keempat. Tangannya diikat seperti yang lain. Sebuah jarum masuk ke lengannya yang tergigit. Darahnya diambil.</p>
-  <p>Seorang dokter mendekat. Ia memeriksa mata Lily dengan senter kecil. Lily membuka mulut untuk bertanya, tapi dokter itu sudah berpaling sebelum ia sempat mengucapkan satu kata.</p>
   <div class="divider"></div>
-  <button onclick="go('a16')">Melihat ke arah dua orang di kursi lain</button>
-  <button onclick="go('a17_consequence')">Meronta sekuat tenaga di kursi</button>
+  <button onclick="go('h5A', 45)">Melirik ke arah dua orang itu</button>
+  <button onclick="go('h5B', 45)">Menatap dokter itu</button>
 </div>
 
-<!-- ============ ADEGAN KONSEKUENSI 4 ============ -->
-<div id="a17_consequence" class="scene" data-fear="95" data-shake="true">
-  <p>Lily menarik tangannya dengan brutal. Tali pengikat itu menggesek kulit pergelangan tangannya, menggores hingga berdarah. Ia menghentak-hentakkan kakinya, membuat kursi berderit nyaring.</p>
-  <p>Melihat itu, seorang petugas ber-APD menghampiri. Tanpa bicara, ia menyuntikkan sesuatu yang dingin ke leher Lily.</p>
-  <p>Ternyata itu bukan obat penenang. Itu adalah cairan pembersih sel yang sangat keras. Tubuh Lily langsung menegang. Jantungnya berdetak kencang, lalu berhenti. Matanya terbelalak melihat langit-langit laboratorium sebelum pandangannya memudar selamanya.</p>
-  <div class="divider"></div>
-  <button onclick="triggerGameOver('Petugas salah menyuntikkan cairan. Jantung Lily berhenti seketika.')">Gelap...</button>
-</div>
-
-<!-- ============ ADEGAN 16 ============ -->
-<div id="a16" class="scene" data-fear="85">
+<!-- ============ HALAMAN 5A ============ -->
+<div id="h5A" class="scene" data-fear="45">
   <p>Lily menoleh ke kursi di sebelahnya. Seorang pria. Matanya terbuka, namun ia tak bergerak seperti orang yang tidak sadarkan diri.</p>
   <p>Di kursi berikutnya, itu wanita yang bersamanya saat di mobil. Matanya merah dan berair. Tapi ia melihat Lily. Lily tahu itu.</p>
   <p>Kursi ketiga kosong. Tapi tali pengikatnya masih ada. Seperti seseorang baru saja diambil dari sana.</p>
   <p>Lily menelan ludah.</p>
   <div class="divider"></div>
-  <button onclick="go('a17')">Menatap dokter yang memeriksanya</button>
+  <button onclick="go('h5B', 45)">Melihat ke arah dokter</button>
 </div>
 
-<!-- ============ ADEGAN 17 ============ -->
-<div id="a17" class="scene" data-fear="85">
+<!-- ============ HALAMAN 5B ============ -->
+<div id="h5B" class="scene" data-fear="45">
   <p>Dokter itu tidak tua, tidak muda. Wajahnya datar. Tidak ada kemarahan, tidak ada belas kasihan. Hanya konsentrasi.</p>
   <p>Ia memeriksa mata Lily, lalu nadinya, lalu mencatat sesuatu di papan klip. Lily mencoba menangkap matanya. Dokter itu tidak menoleh.</p>
   <p>"Tolong," kata Lily, suaranya serak. "Kenapa aku di sini?"</p>
-  <p>Dokter itu berhenti sejenak. Lalu berkata, tanpa menoleh:</p>
-  <p>"Kamu akan tahu."</p>
-  <p>Lalu ia pergi.</p>
+  <p>Dokter itu berhenti sejenak. Lalu berkata dengan suara yang rendah:</p>
+  <p>"Kami juga tidak tahu."</p>
   <div class="divider"></div>
-  <button onclick="go('a18')">Menunggu hasil tes darah</button>
+  <button onclick="go('h5C', 45)">Terdiam</button>
+  <button onclick="go('h6', 60)">Memberontak tidak terima</button>
 </div>
 
-<!-- ============ ADEGAN 18 ============ -->
-<div id="a18" class="scene" data-fear="90">
-  <p>Waktu berlalu. Lily tidak tahu berapa lama. Mesin terus berdengung. Orang-orang ber-APD terus bergerak.</p>
-  <p>Lalu seorang asisten datang membawa selembar hasil tes. Dokter mengambilnya, membacanya, dan menggelengkan kepala.</p>
-  <p>"Darahnya normal," katanya, pelan. "Tidak ada infeksi. Tidak ada antibodi. Tidak ada apa pun."</p>
-  <p>Ia menatap Lily lama. Lalu berkata kepada asistennya:</p>
-  <p>"Periksa air liurnya."</p>
+<!-- ============ HALAMAN 5C ============ -->
+<div id="h5C" class="scene" data-fear="45">
+  <p>Seorang dokter lainnya mendekat, memeriksa keadaan Lily dan memegang kepalanya sejenak sebelum ia memeriksa mata Lily dengan senter kecil.</p>
+  <p>Lily tidak membuka mulut untuk bertanya. Dia pasif, tak melawan dan penasaran.</p>
+  <p>Rasanya, harapan pun tak ada.</p>
   <div class="divider"></div>
-  <button onclick="go('a19')">Bertanya</button>
+  <button onclick="go('flashback-senter', 45, 'set-flashback')">Cahaya dari senter</button>
 </div>
 
-<!-- ============ ADEGAN 19 ============ -->
-<div id="a19" class="scene" data-fear="100" data-shake="true">
-  <p>Lily membuka mulut. "Apa maksudnya? Kenapa air liurku?"</p>
-  <p>Tidak ada yang menjawab. Asisten itu sudah pergi. Dokter itu sudah berpaling.</p>
-  <p>Lalu seseorang mendekat dari sisi lain—bukan dokter, bukan asisten. Seseorang yang tidak bisa ia lihat wajahnya, dengan tangan yang gemetar. Ia membawa jarum suntik.</p>
-  <p>Lily mencoba meronta. Tapi tali pengikatnya terlalu kuat.</p>
-  <p>Jarum itu masuk ke lengannya. Dingin menjalar. Dunia mulai kabur.</p>
-  <p>Sebelum matanya tertutup, Lily mendengar sesuatu—bukan suara dokter, bukan suara mesin. Suara seseorang di dekat telinganya, berbisik:</p>
+<!-- ============ HALAMAN FLASBACK (DARI SENTER) ============ -->
+<div id="flashback-senter" class="scene" data-fear="45" data-flashback="true">
+  <p>"Kamu akan baik-baik saja! Bertahanlah!"</p>
+  <p>Samar.</p>
+  <p>Tidak jelas untuk diingat.</p>
+  <p>Seorang wanita berambut sebahu memegang tubuh kecil Lily yang lemah.</p>
+  <p>Langit tampak kusam. Asap merajalela di udara.</p>
+  <p>Lily menolehkan kepalanya dalam pelukan. Api.</p>
+  <p>Di sekelilingnya semuanya terbakar habis.</p>
+  <p>Gedung-gedung hancur, menimpa segalanya yang berada di bawah.</p>
+  <p>"Hey! Sadar, Bangunlah! Kamu harus hidup!"</p>
+  <div class="divider"></div>
+  <button onclick="triggerWhiteEnding()">Bangun</button>
+</div>
+
+<!-- ============ HALAMAN 6 ============ -->
+<div id="h6" class="scene" data-fear="60" data-shake="true">
+  <p>"Kalian gila! Kalian menculik warga sipil tapi tidak tahu apa tujuannya?!"</p>
+  <p>Tubuh Lily meronta, ia mencoba melepaskan diri dari ikatan namun tidak bisa. Badannya terlalu kecil.</p>
+  <p>"Di luar sana, orang-orang menggila dan menyerang satu sama lain! Tapi kenapa aku.. kami yang tidak bersalah yang ditangkap?!"</p>
+  <p>Tidak ada yang menjawab. Tidak ada yang peduli. Bahkan dokter itu sudah berpaling pergi.</p>
+  <p>Di tengah-tengah pemberontakan Lily, seseorang mendekat dari sisi lain.</p>
+  <p>Ia membawa jarum suntik.</p>
+  <p>Lily masih meronta. Tapi tali pengikatnya terlalu kuat.</p>
+  <p>Jarum itu pun masuk ke lengannya. Dingin menjalar. Dunia mulai kabur.</p>
+  <p>Sebelum matanya tertutup, Lily mendengar sesuatu. Suara seseorang di dekat telinganya yang berbisik:</p>
   <p>"Kamu akan baik-baik saja."</p>
-  <p>Lalu gelap.</p>
   <div class="divider"></div>
-  <button onclick="triggerEnding()">Lanjut...</button>
+  <button onclick="triggerBlackEnding()">Pandangan Lily pun gelap</button>
 </div>
 
 <script>
 let policeInterval;
-let lastSafeSceneId = 'a1';
+let lastSafeSceneId = 'h1';
+let lastSafeFear = 10;
 
-function go(id) {
-  if (!id.includes('consequence') && id !== 'a1') {
+function go(id, newFear, action) {
+  // Simpan posisi aman (jika bukan Game Over)
+  if (id !== 'h1B' && id !== 'h2D' && !id.includes('consequence')) {
     lastSafeSceneId = id;
+  }
+
+  // Cek transisi khusus
+  if (action === 'remove-flashback') {
+    document.body.classList.remove('flashback-bg');
+  }
+  if (action === 'set-flashback') {
+    // (Kita tidak set background di sini, karena kita mau langsung ke flashback-senter)
+  }
+
+  // Atur Background khusus
+  if (id.includes('flashback')) {
+    document.body.classList.add('flashback-bg');
+  } else {
+    document.body.classList.remove('flashback-bg', 'white-bg');
   }
 
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
@@ -422,28 +471,35 @@ function go(id) {
   if (targetScene) targetScene.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  document.querySelectorAll('button[onclick*="go(\'' + id + '\')"]').forEach(btn => {
+  // Tandai tombol
+  document.querySelectorAll('button[onclick*="go(\'' + id + '\'"]').forEach(btn => {
     btn.classList.add('done');
   });
 
+  // EFEK GETARAN (Hanya jika data-shake="true" di HTML)
   if (targetScene && targetScene.dataset.shake === 'true') {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), 500); 
   }
 
+  // LOGIKA METER KETAKUTAN & BLUR
   if (targetScene) {
-    const fearLevel = targetScene.dataset.fear || 0;
+    let currentFear = parseInt(newFear) || 0;
+    let prevFear = parseInt(document.getElementById('fear-text').innerText) || 0;
+    
+    // Update Bar
     const fearBar = document.getElementById('fear-bar');
     const fearText = document.getElementById('fear-text');
     const fearPanel = document.getElementById('fear-panel');
 
-    fearBar.style.width = fearLevel + '%';
-    fearText.innerText = fearLevel + '%';
+    fearBar.style.width = currentFear + '%';
+    fearText.innerText = currentFear + '%';
     
-    if (fearLevel < 40) {
+    // Warna Bar
+    if (currentFear < 40) {
       fearBar.style.background = '#4a5d4a'; 
       fearPanel.classList.remove('high');
-    } else if (fearLevel < 80) {
+    } else if (currentFear < 80) {
       fearBar.style.background = '#b58b00'; 
       fearPanel.classList.remove('high');
     } else {
@@ -451,6 +507,14 @@ function go(id) {
       fearPanel.classList.add('high'); 
     }
 
+    // EFEK BLUR JIKA > 65%
+    if (currentFear >= 65) {
+      document.body.classList.add('fear-blur');
+    } else {
+      document.body.classList.remove('fear-blur');
+    }
+
+    // LOGIKA LAMPU POLISI
     clearInterval(policeInterval);
     document.body.classList.remove('police-blue', 'police-red');
 
@@ -471,12 +535,13 @@ function go(id) {
   }
 }
 
+// ==================== FUNGSI GAME OVER ====================
 function triggerGameOver(reason) {
   document.body.classList.add('shake');
   document.body.classList.add('jumpscare-flash');
 
   setTimeout(() => {
-    document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
+    document.getElementById('game-over-text').innerHTML = reason;
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
@@ -484,6 +549,8 @@ function triggerGameOver(reason) {
     
     document.body.classList.remove('jumpscare-flash');
     document.body.classList.remove('shake');
+    // Hapus blur saat game over
+    document.body.classList.remove('fear-blur');
   }, 800); 
 }
 
@@ -492,19 +559,49 @@ function retryCheckpoint() {
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
   document.querySelectorAll('.scene').forEach(s => s.style.display = '');
-  go(lastSafeSceneId);
+  // Kembalikan blur jika memang ketakutannya tinggi
+  if (parseInt(document.getElementById('fear-text').innerText) >= 65) {
+    document.body.classList.add('fear-blur');
+  }
+  go(lastSafeSceneId, parseInt(document.getElementById('fear-text').innerText));
 }
 
-function triggerEnding() {
-  document.querySelector('#a19 button').style.display = 'none';
+// ==================== FUNGSI AKHIR BAB ====================
+function triggerBlackEnding() {
+  document.querySelector('#h6 button').style.display = 'none';
   document.body.classList.add('fade-out');
 
   setTimeout(() => {
+    document.body.classList.remove('fade-out');
+    document.body.style.backgroundColor = '#000'; // Hitam total
     document.getElementById('end-screen').style.display = 'block';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
-    document.getElementById('a19').style.display = 'none';
-    document.body.classList.remove('fade-out');
+    document.getElementById('h6').style.display = 'none';
+    document.getElementById('end-screen').style.color = '#888';
+  }, 1600);
+}
+
+function triggerWhiteEnding() {
+  document.querySelector('#flashback-senter button').style.display = 'none';
+  document.body.classList.add('fade-out');
+
+  setTimeout(() => {
+    document.body.classList.remove('fade-out', 'flashback-bg');
+    document.body.style.backgroundColor = '#f0f0f0'; // Putih
+    document.body.style.color = '#333'; // Teks gelap
+    
+    document.getElementById('end-screen').style.display = 'block';
+    document.getElementById('fear-panel').style.display = 'none';
+    document.querySelector('h2').style.display = 'none';
+    document.getElementById('flashback-senter').style.display = 'none';
+    
+    // Sesuaikan warna tombol di layar putih
+    const btns = document.querySelectorAll('#end-screen button, #end-screen a');
+    btns.forEach(b => {
+      b.style.color = '#333';
+      b.style.borderColor = '#999';
+    });
   }, 1600);
 }
 
@@ -519,12 +616,9 @@ window.onload = () => {
   document.getElementById('end-screen').style.display = 'none';
   document.getElementById('game-over-screen').style.display = 'none';
   
-  const initialScene = document.getElementById('a1');
-  if (initialScene) {
-    const initialFear = initialScene.dataset.fear;
-    document.getElementById('fear-bar').style.width = initialFear + '%';
-    document.getElementById('fear-text').innerText = initialFear + '%';
-  }
+  // Setup awal meteran
+  document.getElementById('fear-bar').style.width = '10%';
+  document.getElementById('fear-text').innerText = '10%';
 };
 </script>
 
