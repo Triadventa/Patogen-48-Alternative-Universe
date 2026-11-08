@@ -18,15 +18,10 @@
     transition: background-color 1s ease, color 1s ease, opacity 1.5s ease;
   }
 
-  /* ==================== EFEK LAYAR KABUR (BLUR) RINGAN ==================== */
-  .scene.fear-blur p {
-    filter: blur(0.8px); /* Diturunkan drastis agar tetap sangat mudah dibaca */
-    opacity: 0.9;
-    transition: filter 0.5s ease;
-  }
-  .scene.fear-blur button {
-    filter: blur(0.4px);
-    opacity: 0.9;
+  /* ==================== EFEK LAYAR KABUR (BLUR) SANGAT RINGAN ==================== */
+  .fear-blur p, .fear-blur button {
+    filter: blur(0.5px); /* Diturunkan jadi 0.5px saja agar tetap terbaca jelas */
+    opacity: 0.95;
   }
 
   /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
@@ -423,7 +418,6 @@
   <p>Lily tidak membuka mulut untuk bertanya. Dia pasif, tak melawan dan penasaran.</p>
   <p>Rasanya, harapan pun tak ada.</p>
   <div class="divider"></div>
-  <!-- Logika: Jika belum flashback, tombol ini membawa ke flashback. Jika sudah, langsung ke akhir. -->
   <button onclick="checkAndGoFlashback()">Cahaya dari senter</button>
 </div>
 
@@ -461,15 +455,16 @@
 <script>
 let policeInterval;
 let lastSafeSceneId = 'h1';
-let hasFlashedBack = false; // Variabel untuk melacak apakah sudah flashback
+let hasFlashedBack = false;
 
 function go(id, newFear) {
-  // Simpan posisi aman (jika bukan Game Over)
   if (id !== 'h1B' && id !== 'h2D' && !id.includes('consequence')) {
     lastSafeSceneId = id;
   }
 
-  // Logika Transisi Kilat Putih
+  // Bersihkan efek blur dari semua scene sebelum pindah
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
+
   if (id.includes('flashback')) {
     hasFlashedBack = true;
     const whiteFlash = document.getElementById('white-flash');
@@ -481,14 +476,12 @@ function go(id, newFear) {
       document.getElementById(id).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      // Matikan kilatan putih setelah masuk ke halaman flashback
       setTimeout(() => {
         whiteFlash.classList.remove('active');
       }, 100);
-    }, 800); // Waktu tunggu kilatan putih
+    }, 800); 
     
   } else {
-    // Transisi normal (tanpa kilat)
     if (!id.includes('flashback')) {
       document.body.classList.remove('flashback-bg');
     }
@@ -498,7 +491,6 @@ function go(id, newFear) {
     if (targetScene) targetScene.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Update efek berdasarkan scene baru
     updateEffects(id, newFear);
   }
 }
@@ -507,18 +499,15 @@ function updateEffects(id, newFear) {
   const targetScene = document.getElementById(id);
   if (!targetScene) return;
 
-  // Tandai tombol
   document.querySelectorAll('button[onclick*="go(\'' + id + '\'"]').forEach(btn => {
     btn.classList.add('done');
   });
 
-  // EFEK GETARAN (Hanya jika data-shake="true" di HTML)
   if (targetScene.dataset.shake === 'true') {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), 500); 
   }
 
-  // LOGIKA METER KETAKUTAN & BLUR
   let currentFear = parseInt(newFear) || 0;
   const fearBar = document.getElementById('fear-bar');
   const fearText = document.getElementById('fear-text');
@@ -527,7 +516,6 @@ function updateEffects(id, newFear) {
   fearBar.style.width = currentFear + '%';
   fearText.innerText = currentFear + '%';
   
-  // Warna Bar
   if (currentFear < 40) {
     fearBar.style.background = '#4a5d4a'; 
     fearPanel.classList.remove('high');
@@ -539,14 +527,11 @@ function updateEffects(id, newFear) {
     fearPanel.classList.add('high'); 
   }
 
-  // EFEK BLUR JIKA > 65%
+  // Pasang efek blur HANYA pada scene yang sedang aktif
   if (currentFear >= 65) {
     targetScene.classList.add('fear-blur');
-  } else {
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
   }
 
-  // LOGIKA LAMPU POLISI
   clearInterval(policeInterval);
   document.body.classList.remove('police-blue', 'police-red');
 
@@ -566,20 +551,14 @@ function updateEffects(id, newFear) {
   }
 }
 
-// ==================== FUNGSI KHUSUS ====================
-
-// Cek apakah sudah pernah flashback atau belum
 function checkAndGoFlashback() {
   if (hasFlashedBack) {
-    // Jika sudah pernah, langsung ke ending
     triggerBlackEnding();
   } else {
-    // Jika belum, masuk ke flashback
     go('flashback-senter', 45);
   }
 }
 
-// ==================== FUNGSI GAME OVER ====================
 function triggerGameOver(reason) {
   document.body.classList.add('shake');
   document.body.classList.add('jumpscare-flash');
@@ -593,7 +572,7 @@ function triggerGameOver(reason) {
     
     document.body.classList.remove('jumpscare-flash');
     document.body.classList.remove('shake');
-    document.body.classList.remove('fear-blur');
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
   }, 800); 
 }
 
@@ -605,9 +584,7 @@ function retryCheckpoint() {
   go(lastSafeSceneId, parseInt(document.getElementById('fear-text').innerText));
 }
 
-// ==================== FUNGSI AKHIR BAB ====================
 function triggerBlackEnding() {
-  // Sembunyikan tombol di halaman terakhir yang aktif
   const activeBtn = document.querySelector('.scene.active button');
   if (activeBtn) activeBtn.style.display = 'none';
   
@@ -623,7 +600,6 @@ function triggerBlackEnding() {
     document.querySelector('h2').style.display = 'none';
     document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
     
-    // Reset warna tombol
     const btns = document.querySelectorAll('#end-screen button, #end-screen a');
     btns.forEach(b => {
       b.style.color = '#ccc';
@@ -648,7 +624,6 @@ function triggerWhiteEnding() {
     document.querySelector('h2').style.display = 'none';
     document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
     
-    // Sesuaikan warna tombol di layar putih
     const btns = document.querySelectorAll('#end-screen button, #end-screen a');
     btns.forEach(b => {
       b.style.color = '#333';
@@ -668,7 +643,6 @@ window.onload = () => {
   document.getElementById('end-screen').style.display = 'none';
   document.getElementById('game-over-screen').style.display = 'none';
   
-  // Setup awal meteran
   document.getElementById('fear-bar').style.width = '10%';
   document.getElementById('fear-text').innerText = '10%';
 };
