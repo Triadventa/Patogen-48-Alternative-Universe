@@ -61,6 +61,7 @@
     color: #888;
     margin-bottom: 40px;
     text-align: center;
+    padding: 0 20px;
   }
   #game-over-screen button {
     padding: 15px 30px;
@@ -419,8 +420,7 @@
 let isTyping = false;
 let typeTimeout;
 let policeInterval;
-let currentSceneId = 'a1';
-let lastSafeSceneId = 'a1'; // Menyimpan adegan terakhir sebelum terjebak di konsekuensi
+let lastSafeSceneId = 'a1'; // Menyimpan ID adegan terakhir sebelum terjebak di konsekuensi
 
 function finishTyping() {
   if (!isTyping) return;
@@ -441,3 +441,179 @@ function startTyping(sceneElement) {
   isTyping = true;
   const paragraphs = sceneElement.querySelectorAll('p');
   const btns = sceneElement.querySelectorAll('button');
+  btns.forEach(btn => btn.style.opacity = '0');
+  
+  let pIndex = 0, charIndex = 0;
+  
+  paragraphs.forEach(p => {
+    p.dataset.fulltext = p.innerHTML;
+    p.innerHTML = '';
+  });
+
+  function typeChar() {
+    if (!isTyping) return;
+    if (pIndex >= paragraphs.length) {
+      isTyping = false;
+      btns.forEach(btn => btn.style.opacity = '1');
+      return;
+    }
+
+    const currentP = paragraphs[pIndex];
+    const fullText = currentP.dataset.fulltext;
+    
+    if (charIndex < fullText.length) {
+      currentP.innerHTML += fullText.substring(charIndex, charIndex + 3);
+      charIndex += 3;
+      typeTimeout = setTimeout(typeChar, 20); 
+    } else {
+      pIndex++;
+      charIndex = 0;
+      typeTimeout = setTimeout(typeChar, 400); 
+    }
+  }
+  typeChar();
+}
+
+document.body.addEventListener('click', finishTyping);
+
+function go(id) {
+  if (isTyping) finishTyping();
+
+  // Simpan adegan terakhir yang aman sebelum masuk ke konsekuensi
+  if (!id.includes('consequence') && id !== 'a1') {
+    lastSafeSceneId = id;
+  }
+
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  const targetScene = document.getElementById(id);
+  targetScene.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.querySelectorAll('button[onclick*="go(\'' + id + '\')"]').forEach(btn => {
+    btn.classList.add('done');
+  });
+
+  if (targetScene.dataset.shake === 'true') {
+    document.body.classList.add('shake');
+    setTimeout(() => document.body.classList.remove('shake'), 500); 
+  }
+
+  const fearLevel = targetScene.dataset.fear || 0;
+  const fearBar = document.getElementById('fear-bar');
+  const fearText = document.getElementById('fear-text');
+  const fearPanel = document.getElementById('fear-panel');
+
+  fearBar.style.width = fearLevel + '%';
+  fearText.innerText = fearLevel + '%';
+  
+  if (fearLevel < 40) {
+    fearBar.style.background = '#4a5d4a'; 
+    fearPanel.classList.remove('high');
+  } else if (fearLevel < 80) {
+    fearBar.style.background = '#b58b00'; 
+    fearPanel.classList.remove('high');
+  } else {
+    fearBar.style.background = '#ff3333'; 
+    fearPanel.classList.add('high'); 
+  }
+
+  clearInterval(policeInterval);
+  document.body.classList.remove('police-blue', 'police-red');
+
+  if (targetScene.dataset.police === 'true') {
+    let isBlue = true;
+    document.body.classList.add('police-blue');
+    policeInterval = setInterval(() => {
+      if (isBlue) {
+        document.body.classList.remove('police-blue');
+        document.body.classList.add('police-red');
+      } else {
+        document.body.classList.remove('police-red');
+        document.body.classList.add('police-blue');
+      }
+      isBlue = !isBlue;
+    }, 800); 
+  }
+
+  startTyping(targetScene);
+}
+
+// ==================== FUNGSI GAME OVER & SUARA ====================
+function triggerGameOver(reason) {
+  document.body.classList.add('shake');
+  
+  // Putar suara teriakan
+  playScreamSound();
+
+  setTimeout(() => {
+    document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
+    document.getElementById('game-over-screen').style.display = 'flex';
+    document.getElementById('fear-panel').style.display = 'none';
+    document.querySelector('h2').style.display = 'none';
+    document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
+  }, 1000);
+}
+
+function playScreamSound() {
+  if ('speechSynthesis' in window) {
+    // Hentikan suara sebelumnya jika ada
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance("Aaaaaa......");
+    utterance.lang = 'id-ID'; // Suara bahasa Indonesia
+    utterance.pitch = 2; // Nada tinggi (seperti teriakan)
+    utterance.rate = 0.8; // Sedikit lebih lambat agar terdengar dramatis
+    utterance.volume = 1; // Volume maksimal
+    
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function retryCheckpoint() {
+  document.getElementById('game-over-screen').style.display = 'none';
+  document.getElementById('fear-panel').style.display = 'block';
+  document.querySelector('h2').style.display = 'block';
+  
+  // Kembalikan tampilan scene
+  document.querySelectorAll('.scene').forEach(s => s.style.display = '');
+  
+  // Kembali ke adegan aman terakhir
+  go(lastSafeSceneId);
+}
+
+// ==================== FUNGSI LAYAR MENGHITAM ====================
+function triggerEnding() {
+  document.querySelector('#a19 button').style.display = 'none';
+  document.body.classList.add('fade-out');
+
+  setTimeout(() => {
+    document.getElementById('end-screen').style.display = 'block';
+    document.getElementById('fear-panel').style.display = 'none';
+    document.querySelector('h2').style.display = 'none';
+    document.getElementById('a19').style.display = 'none';
+    document.body.classList.remove('fade-out');
+  }, 1600);
+}
+
+function triggerNextChapter() {
+  document.body.classList.add('fade-out');
+  setTimeout(() => {
+    window.location.href = 'bab2.html';
+  }, 1000);
+}
+
+window.onload = () => {
+  document.getElementById('end-screen').style.display = 'none';
+  document.getElementById('game-over-screen').style.display = 'none';
+  
+  const initialScene = document.getElementById('a1');
+  const initialFear = initialScene.dataset.fear;
+  document.getElementById('fear-bar').style.width = initialFear + '%';
+  document.getElementById('fear-text').innerText = initialFear + '%';
+  
+  startTyping(initialScene);
+};
+</script>
+
+</body>
+</html>
