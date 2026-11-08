@@ -18,15 +18,17 @@
     transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease;
   }
 
-  /* Sembunyikan Video YouTube */
-  #youtube-scream {
-    position: fixed;
-    top: -9999px;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
+  /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
+  .jumpscare-flash {
+    animation: redFlash 0.8s ease-out;
+  }
+  @keyframes redFlash {
+    0% { background-color: #ff0000; box-shadow: inset 0 0 200px #ff0000; }
+    20% { background-color: #0d0d0d; box-shadow: none; }
+    40% { background-color: #ff0000; box-shadow: inset 0 0 200px #ff0000; }
+    60% { background-color: #0d0d0d; box-shadow: none; }
+    80% { background-color: #8b0000; box-shadow: inset 0 0 100px #ff0000; }
+    100% { background-color: #0d0d0d; box-shadow: none; }
   }
 
   /* ==================== TOMBOL X (KELUAR) ==================== */
@@ -60,12 +62,12 @@
     justify-content: center;
   }
   #game-over-screen h1 {
-    font-size: 50px;
+    font-size: 60px;
     color: #ff0000;
-    letter-spacing: 10px;
-    font-weight: normal;
-    text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-    animation: bloodPulse 1s infinite alternate;
+    letter-spacing: 15px;
+    font-weight: bold;
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+    animation: bloodPulse 0.2s infinite alternate; /* Animasi lebih cepat untuk horor */
     margin-bottom: 20px;
   }
   #game-over-screen p { color: #888; margin-bottom: 40px; text-align: center; padding: 0 20px; }
@@ -75,7 +77,7 @@
     font-size: 16px; transition: 0.3s;
   }
   #game-over-screen button:hover { background: #333; color: #fff; border-color: #aaa; }
-  @keyframes bloodPulse { from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.3); } to { text-shadow: 0 0 30px rgba(255, 0, 0, 1); } }
+  @keyframes bloodPulse { from { transform: scale(1); text-shadow: 0 0 20px rgba(255, 0, 0, 0.5); } to { transform: scale(1.05); text-shadow: 0 0 50px rgba(255, 0, 0, 1); } }
 
   /* Kotak Akhir Bab */
   #end-screen {
@@ -113,7 +115,7 @@
   @keyframes pulsePanel { from { box-shadow: 0 0 5px rgba(255, 0, 0, 0.2); } to { box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); } }
 
   /* ==================== EFEK GETARAN LAYAR ==================== */
-  .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+  .shake { animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both; }
   @keyframes shake {
     10%, 90% { transform: translate3d(-4px, 0, 0); }
     20%, 80% { transform: translate3d(6px, 0, 0); }
@@ -144,13 +146,6 @@
 </style>
 </head>
 <body>
-
-<!-- Video YouTube Tersembunyi untuk Suara Teriakan -->
-<!-- ID video: 5ICTXlAX8BE -->
-<iframe id="youtube-scream" 
-  src="https://www.youtube.com/embed/5ICTXlAX8BE?enablejsapi=1&autoplay=0" 
-  allow="autoplay">
-</iframe>
 
 <a href="pilihchapter.html" id="btn-exit" title="Kembali ke Daftar Bab">✕</a>
 
@@ -416,21 +411,6 @@
 <script>
 let policeInterval;
 let lastSafeSceneId = 'a1';
-let ytPlayer;
-
-// Muat API YouTube secara otomatis di latar belakang
-const tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player('youtube-scream', {
-    events: {
-      'onReady': () => { console.log("Audio YouTube siap."); }
-    }
-  });
-}
 
 function go(id) {
   if (!id.includes('consequence') && id !== 'a1') {
@@ -491,31 +471,29 @@ function go(id) {
   }
 }
 
-// ==================== FUNGSI GAME OVER & SUARA ====================
+// ==================== FUNGSI GAME OVER DENGAN JUMPSCARE ====================
 function triggerGameOver(reason) {
+  // Memicu getaran layar hebat
   document.body.classList.add('shake');
   
-  // Mainkan audio YouTube
-  if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
-    ytPlayer.setVolume(100);
-    ytPlayer.playVideo();
-  }
+  // Memicu kilatan merah (jumpscare)
+  document.body.classList.add('jumpscare-flash');
 
   setTimeout(() => {
+    // Menampilkan layar Game Over setelah kilatan
     document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
     document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
-  }, 1000);
+    
+    // Membersihkan class agar bisa digunakan lagi jika pemain mati lagi
+    document.body.classList.remove('jumpscare-flash');
+    document.body.classList.remove('shake');
+  }, 800); // 800ms sesuai durasi animasi redFlash
 }
 
 function retryCheckpoint() {
-  // Hentikan suara YouTube jika masih berputar
-  if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
-    ytPlayer.pauseVideo();
-  }
-
   document.getElementById('game-over-screen').style.display = 'none';
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
