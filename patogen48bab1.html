@@ -18,6 +18,17 @@
     transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease;
   }
 
+  /* Sembunyikan Video YouTube */
+  #youtube-scream {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* ==================== TOMBOL X (KELUAR) ==================== */
   #btn-exit {
     position: fixed; top: 15px; right: 15px;
@@ -134,11 +145,12 @@
 </head>
 <body>
 
-<!-- Audio Teriakan (Tersembunyi) -->
-<audio id="scream-sound">
-  <!-- Link MP3 teriakan horor dari arsip gratis -->
-  <source src="https://www.soundjay.com/human/sounds/scream-01.mp3" type="audio/mpeg">
-</audio>
+<!-- Video YouTube Tersembunyi untuk Suara Teriakan -->
+<!-- ID video: 5ICTXlAX8BE -->
+<iframe id="youtube-scream" 
+  src="https://www.youtube.com/embed/5ICTXlAX8BE?enablejsapi=1&autoplay=0" 
+  allow="autoplay">
+</iframe>
 
 <a href="pilihchapter.html" id="btn-exit" title="Kembali ke Daftar Bab">✕</a>
 
@@ -404,6 +416,21 @@
 <script>
 let policeInterval;
 let lastSafeSceneId = 'a1';
+let ytPlayer;
+
+// Muat API YouTube secara otomatis di latar belakang
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('youtube-scream', {
+    events: {
+      'onReady': () => { console.log("Audio YouTube siap."); }
+    }
+  });
+}
 
 function go(id) {
   if (!id.includes('consequence') && id !== 'a1') {
@@ -468,13 +495,11 @@ function go(id) {
 function triggerGameOver(reason) {
   document.body.classList.add('shake');
   
-  // Putar file audio MP3 teriakan
-  const audio = document.getElementById('scream-sound');
-  audio.currentTime = 0; // Mulai dari awal
-  audio.volume = 1.0; // Volume maksimal
-  audio.play().catch(error => {
-    console.log("Browser memblokir audio otomatis:", error);
-  });
+  // Mainkan audio YouTube
+  if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
+    ytPlayer.setVolume(100);
+    ytPlayer.playVideo();
+  }
 
   setTimeout(() => {
     document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
@@ -486,6 +511,11 @@ function triggerGameOver(reason) {
 }
 
 function retryCheckpoint() {
+  // Hentikan suara YouTube jika masih berputar
+  if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+    ytPlayer.pauseVideo();
+  }
+
   document.getElementById('game-over-screen').style.display = 'none';
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
