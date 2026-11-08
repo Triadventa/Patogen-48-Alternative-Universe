@@ -400,65 +400,76 @@ let policeInterval;
 let lastSafeSceneId = 'a1';
 
 function go(id) {
+  // Simpan posisi aman terakhir untuk fitur "Coba Lagi"
   if (!id.includes('consequence') && id !== 'a1') {
     lastSafeSceneId = id;
   }
 
+  // Sembunyikan semua adegan, tampilkan yang dipilih
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   const targetScene = document.getElementById(id);
-  targetScene.classList.add('active');
+  if (targetScene) targetScene.classList.add('active');
+  
+  // Scroll ke atas
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  // Tandai tombol yang sudah dipilih
   document.querySelectorAll('button[onclick*="go(\'' + id + '\')"]').forEach(btn => {
     btn.classList.add('done');
   });
 
-  if (targetScene.dataset.shake === 'true') {
+  // Efek Getaran Layar
+  if (targetScene && targetScene.dataset.shake === 'true') {
     document.body.classList.add('shake');
     setTimeout(() => document.body.classList.remove('shake'), 500); 
   }
 
-  const fearLevel = targetScene.dataset.fear || 0;
-  const fearBar = document.getElementById('fear-bar');
-  const fearText = document.getElementById('fear-text');
-  const fearPanel = document.getElementById('fear-panel');
+  // Logika Meter Ketakutan (Fear)
+  if (targetScene) {
+    const fearLevel = targetScene.dataset.fear || 0;
+    const fearBar = document.getElementById('fear-bar');
+    const fearText = document.getElementById('fear-text');
+    const fearPanel = document.getElementById('fear-panel');
 
-  fearBar.style.width = fearLevel + '%';
-  fearText.innerText = fearLevel + '%';
-  
-  if (fearLevel < 40) {
-    fearBar.style.background = '#4a5d4a'; 
-    fearPanel.classList.remove('high');
-  } else if (fearLevel < 80) {
-    fearBar.style.background = '#b58b00'; 
-    fearPanel.classList.remove('high');
-  } else {
-    fearBar.style.background = '#ff3333'; 
-    fearPanel.classList.add('high'); 
-  }
+    fearBar.style.width = fearLevel + '%';
+    fearText.innerText = fearLevel + '%';
+    
+    if (fearLevel < 40) {
+      fearBar.style.background = '#4a5d4a'; // Hijau
+      fearPanel.classList.remove('high');
+    } else if (fearLevel < 80) {
+      fearBar.style.background = '#b58b00'; // Kuning/Oranye
+      fearPanel.classList.remove('high');
+    } else {
+      fearBar.style.background = '#ff3333'; // Merah
+      fearPanel.classList.add('high'); 
+    }
 
-  clearInterval(policeInterval);
-  document.body.classList.remove('police-blue', 'police-red');
+    // Logika Efek Lampu Polisi
+    clearInterval(policeInterval);
+    document.body.classList.remove('police-blue', 'police-red');
 
-  if (targetScene.dataset.police === 'true') {
-    let isBlue = true;
-    document.body.classList.add('police-blue');
-    policeInterval = setInterval(() => {
-      if (isBlue) {
-        document.body.classList.remove('police-blue');
-        document.body.classList.add('police-red');
-      } else {
-        document.body.classList.remove('police-red');
-        document.body.classList.add('police-blue');
-      }
-      isBlue = !isBlue;
-    }, 800); 
+    if (targetScene.dataset.police === 'true') {
+      let isBlue = true;
+      document.body.classList.add('police-blue');
+      policeInterval = setInterval(() => {
+        if (isBlue) {
+          document.body.classList.remove('police-blue');
+          document.body.classList.add('police-red');
+        } else {
+          document.body.classList.remove('police-red');
+          document.body.classList.add('police-blue');
+        }
+        isBlue = !isBlue;
+      }, 800); 
+    }
   }
 }
 
+// ==================== FUNGSI GAME OVER ====================
 function triggerGameOver(reason) {
   document.body.classList.add('shake');
-  playScreamSound();
+  playScreamSound(); // Memutar suara teriakan
 
   setTimeout(() => {
     document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
@@ -485,10 +496,15 @@ function retryCheckpoint() {
   document.getElementById('game-over-screen').style.display = 'none';
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
+  
+  // Tampilkan kembali semua scene
   document.querySelectorAll('.scene').forEach(s => s.style.display = '');
+  
+  // Kembali ke scene aman terakhir
   go(lastSafeSceneId);
 }
 
+// ==================== FUNGSI AKHIR BAB ====================
 function triggerEnding() {
   document.querySelector('#a19 button').style.display = 'none';
   document.body.classList.add('fade-out');
@@ -509,14 +525,17 @@ function triggerNextChapter() {
   }, 1000);
 }
 
+// Jalankan inisialisasi saat halaman dimuat
 window.onload = () => {
   document.getElementById('end-screen').style.display = 'none';
   document.getElementById('game-over-screen').style.display = 'none';
   
   const initialScene = document.getElementById('a1');
-  const initialFear = initialScene.dataset.fear;
-  document.getElementById('fear-bar').style.width = initialFear + '%';
-  document.getElementById('fear-text').innerText = initialFear + '%';
+  if (initialScene) {
+    const initialFear = initialScene.dataset.fear;
+    document.getElementById('fear-bar').style.width = initialFear + '%';
+    document.getElementById('fear-text').innerText = initialFear + '%';
+  }
 };
 </script>
 
