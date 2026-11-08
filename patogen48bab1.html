@@ -67,7 +67,7 @@
     letter-spacing: 15px;
     font-weight: bold;
     text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-    animation: bloodPulse 0.2s infinite alternate; /* Animasi lebih cepat untuk horor */
+    animation: bloodPulse 0.2s infinite alternate;
     margin-bottom: 20px;
   }
   #game-over-screen p { color: #888; margin-bottom: 40px; text-align: center; padding: 0 20px; }
@@ -471,26 +471,20 @@ function go(id) {
   }
 }
 
-// ==================== FUNGSI GAME OVER DENGAN JUMPSCARE ====================
 function triggerGameOver(reason) {
-  // Memicu getaran layar hebat
   document.body.classList.add('shake');
-  
-  // Memicu kilatan merah (jumpscare)
   document.body.classList.add('jumpscare-flash');
 
   setTimeout(() => {
-    // Menampilkan layar Game Over setelah kilatan
     document.getElementById('game-over-text').innerHTML = reason + "<br><br>Kegelapan menelannya.";
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
     document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
     
-    // Membersihkan class agar bisa digunakan lagi jika pemain mati lagi
     document.body.classList.remove('jumpscare-flash');
     document.body.classList.remove('shake');
-  }, 800); // 800ms sesuai durasi animasi redFlash
+  }, 800); 
 }
 
 function retryCheckpoint() {
@@ -501,7 +495,6 @@ function retryCheckpoint() {
   go(lastSafeSceneId);
 }
 
-// ==================== FUNGSI AKHIR BAB ====================
 function triggerEnding() {
   document.querySelector('#a19 button').style.display = 'none';
   document.body.classList.add('fade-out');
