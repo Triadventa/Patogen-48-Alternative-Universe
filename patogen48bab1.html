@@ -135,6 +135,7 @@
   .scene.active { display: block; animation: fade 0.6s ease; }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   
+  /* Gaya tombol pilihan (Sekarang semuanya netral) */
   button {
     display: block; margin: 12px 0; padding: 14px 16px;
     background: #1a1a1a; color: #ccc; border: 1px solid #333;
@@ -146,9 +147,6 @@
   button:hover { background: #262626; border-color: #555; color: #fff; }
   button.done { color: #6a9a6a; border-color: #2a3a2a; }
   button.done::after { content: " ✓"; float: right; color: #6a9a6a; }
-  
-  button.danger { border-color: #551111; color: #aa5555; }
-  button.danger:hover { background: #2a0000; color: #ff5555; border-color: #ff3333; }
 
   .divider { border-top: 1px solid #222; margin: 24px 0; }
 </style>
@@ -189,7 +187,7 @@
   <p>Lily berlari. Terus berlari. Bukan karena ia tahu harus ke mana. Hanya saja, berdiri diam terasa seperti pilihan yang salah.</p>
   <div class="divider"></div>
   <button onclick="go('a2')">Terus berlari, tanpa menoleh</button>
-  <button class="danger" onclick="go('a3_consequence')">Menoleh sebentar, melihat keramaian</button>
+  <button onclick="go('a3_consequence')">Menoleh sebentar, melihat keramaian</button>
 </div>
 
 <!-- ============ ADEGAN KONSEKUENSI 1 (MENOLEH = GAME OVER) ============ -->
@@ -199,7 +197,7 @@
   <p>Kerumunan orang panik itu berlari ke arahnya. Seseorang menabraknya keras dari depan. Tubuh Lily terpental ke aspal.</p>
   <p>Sebelum ia bisa bangkit, tubuh-tubuh lain menginjaknya. Sepatu, lutut, dan beban massa yang histeris menghantam wajah dan dadanya. Lily mencoba berteriak, tapi suaranya tenggelam.</p>
   <div class="divider"></div>
-  <button class="danger" onclick="triggerGameOver('Tulang rusuk Lily remuk diinjak massa yang panik.')">Gelap...</button>
+  <button onclick="triggerGameOver('Tulang rusuk Lily remuk diinjak massa yang panik.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 2 ============ -->
@@ -212,7 +210,7 @@
   <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
   <button onclick="go('a4')">Melihat lengan yang tergores</button>
-  <button class="danger" onclick="go('a5_consequence')">Terus berlari tanpa memedulikan luka</button>
+  <button onclick="go('a5_consequence')">Terus berlari tanpa memedulikan luka</button>
 </div>
 
 <!-- ============ ADEGAN KONSEKUENSI 2 (ABAIKAN LUKA = GAME OVER) ============ -->
@@ -221,7 +219,7 @@
   <p>Namun tubuhnya sudah lelah. Darah yang mengalir deras membuat pandangannya berkunang-kunang. Ia tersandung kakinya sendiri dan jatuh berguling di aspal yang kasar.</p>
   <p>Lily mencoba berdiri, namun kakinya lemas. Di saat yang sama, seseorang yang terjangkiti berjalan kaku ke arahnya dan menubruk tubuhnya yang tak berdaya.</p>
   <div class="divider"></div>
-  <button class="danger" onclick="triggerGameOver('Kehabisan darah membuat tubuh Lily lumpuh, dan ia tak bisa melarikan diri.')">Gelap...</button>
+  <button onclick="triggerGameOver('Kehabisan darah membuat tubuh Lily lumpuh, dan ia tak bisa melarikan diri.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 4 ============ -->
@@ -284,7 +282,7 @@
   <p>Lily pun menelan ludah ketakutan saat menyadari bekas apa itu.</p>
   <div class="divider"></div>
   <button onclick="go('a10')">Menyentuh bekas itu</button>
-  <button class="danger" onclick="go('a11_consequence')">Berteriak histeris</button>
+  <button onclick="go('a11_consequence')">Berteriak histeris</button>
   <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
 </div>
 
@@ -294,7 +292,7 @@
   <p>Lily berteriak sekuat tenaga. Tenggorokannya terkoyak, suaranya memantul di dinding beton. Ia berteriak tanpa henti, memukul-mukul dinding dengan tangannya yang masih lecet hingga kulitnya terkelupas dan berdarah.</p>
   <p>Karena terlalu banyak berteriak dan menangis, tenggorokan Lily membengkak parah. Napasnya tersengal. Ia mulai tersedak ludahnya sendiri. Tubuhnya kejang hebat, lalu ia jatuh menghantam lantai beton dengan kepala lebih dulu.</p>
   <div class="divider"></div>
-  <button class="danger" onclick="triggerGameOver('Tenggorokan Lily robek karena teriakan, dan benturan di kepalanya merenggut nyawanya.')">Gelap...</button>
+  <button onclick="triggerGameOver('Tenggorokan Lily robek karena teriakan, dan benturan di kepalanya merenggut nyawanya.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 10 ============ -->
@@ -357,7 +355,7 @@
   <p>Seorang dokter mendekat. Ia memeriksa mata Lily dengan senter kecil. Lily membuka mulut untuk bertanya, tapi dokter itu sudah berpaling sebelum ia sempat mengucapkan satu kata.</p>
   <div class="divider"></div>
   <button onclick="go('a16')">Melihat ke arah dua orang di kursi lain</button>
-  <button class="danger" onclick="go('a17_consequence')">Meronta sekuat tenaga di kursi</button>
+  <button onclick="go('a17_consequence')">Meronta sekuat tenaga di kursi</button>
 </div>
 
 <!-- ============ ADEGAN KONSEKUENSI 4 (MERONTA = GAME OVER) ============ -->
@@ -366,7 +364,7 @@
   <p>Melihat itu, seorang petugas ber-APD menghampiri. Tanpa bicara, ia menyuntikkan sesuatu yang dingin ke leher Lily.</p>
   <p>Ternyata itu bukan obat penenang. Itu adalah cairan pembersih sel yang sangat keras. Tubuh Lily langsung menegang. Jantungnya berdetak kencang, lalu berhenti. Matanya terbelalak melihat langit-langit laboratorium sebelum pandangannya memudar selamanya.</p>
   <div class="divider"></div>
-  <button class="danger" onclick="triggerGameOver('Petugas salah menyuntikkan cairan. Jantung Lily berhenti seketika.')">Gelap...</button>
+  <button onclick="triggerGameOver('Petugas salah menyuntikkan cairan. Jantung Lily berhenti seketika.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 16 ============ -->
@@ -420,7 +418,7 @@
 let isTyping = false;
 let typeTimeout;
 let policeInterval;
-let lastSafeSceneId = 'a1'; // Menyimpan ID adegan terakhir sebelum terjebak di konsekuensi
+let lastSafeSceneId = 'a1';
 
 function finishTyping() {
   if (!isTyping) return;
@@ -479,7 +477,6 @@ document.body.addEventListener('click', finishTyping);
 function go(id) {
   if (isTyping) finishTyping();
 
-  // Simpan adegan terakhir yang aman sebelum masuk ke konsekuensi
   if (!id.includes('consequence') && id !== 'a1') {
     lastSafeSceneId = id;
   }
@@ -538,11 +535,8 @@ function go(id) {
   startTyping(targetScene);
 }
 
-// ==================== FUNGSI GAME OVER & SUARA ====================
 function triggerGameOver(reason) {
   document.body.classList.add('shake');
-  
-  // Putar suara teriakan
   playScreamSound();
 
   setTimeout(() => {
@@ -556,15 +550,12 @@ function triggerGameOver(reason) {
 
 function playScreamSound() {
   if ('speechSynthesis' in window) {
-    // Hentikan suara sebelumnya jika ada
     window.speechSynthesis.cancel();
-    
     const utterance = new SpeechSynthesisUtterance("Aaaaaa......");
-    utterance.lang = 'id-ID'; // Suara bahasa Indonesia
-    utterance.pitch = 2; // Nada tinggi (seperti teriakan)
-    utterance.rate = 0.8; // Sedikit lebih lambat agar terdengar dramatis
-    utterance.volume = 1; // Volume maksimal
-    
+    utterance.lang = 'id-ID';
+    utterance.pitch = 2;
+    utterance.rate = 0.8;
+    utterance.volume = 1;
     window.speechSynthesis.speak(utterance);
   }
 }
@@ -573,15 +564,10 @@ function retryCheckpoint() {
   document.getElementById('game-over-screen').style.display = 'none';
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
-  
-  // Kembalikan tampilan scene
   document.querySelectorAll('.scene').forEach(s => s.style.display = '');
-  
-  // Kembali ke adegan aman terakhir
   go(lastSafeSceneId);
 }
 
-// ==================== FUNGSI LAYAR MENGHITAM ====================
 function triggerEnding() {
   document.querySelector('#a19 button').style.display = 'none';
   document.body.classList.add('fade-out');
