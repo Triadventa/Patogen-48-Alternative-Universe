@@ -15,169 +15,120 @@
     line-height: 1.7;
     font-size: 16px;
     overflow-x: hidden;
-    /* Transisi untuk fade-out saat pindah bab */
     transition: background-color 0.5s ease, color 0.5s ease, opacity 1.5s ease;
   }
 
   /* ==================== TOMBOL X (KELUAR) ==================== */
   #btn-exit {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: rgba(20, 20, 20, 0.8);
-    color: #888;
-    border: 1px solid #444;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: 0.3s;
+    position: fixed; top: 15px; right: 15px;
+    background: rgba(20, 20, 20, 0.8); color: #888;
+    border: 1px solid #444; border-radius: 50%;
+    width: 35px; height: 35px; font-size: 16px;
+    cursor: pointer; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; transition: 0.3s;
   }
-  #btn-exit:hover {
-    background: #333;
-    color: #fff;
-    border-color: #888;
-  }
+  #btn-exit:hover { background: #333; color: #fff; border-color: #888; }
 
   /* ==================== EFEK LAMPU POLISI ==================== */
-  body.police-blue {
-    background-color: #051021; 
-    box-shadow: inset 0 0 100px rgba(0, 100, 255, 0.2);
-  }
-  body.police-red {
-    background-color: #1a0505; 
-    box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2);
-  }
+  body.police-blue { background-color: #051021; box-shadow: inset 0 0 100px rgba(0, 100, 255, 0.2); }
+  body.police-red { background-color: #1a0505; box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.2); }
 
   /* ==================== EFEK MEMUDAR (FADE OUT) ==================== */
-  body.fade-out {
-    opacity: 0;
+  body.fade-out { opacity: 0; }
+
+  /* ==================== LAYAR GAME OVER ==================== */
+  #game-over-screen {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 20000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #game-over-screen h1 {
+    font-size: 50px;
+    color: #ff0000;
+    letter-spacing: 10px;
+    font-weight: normal;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    animation: bloodPulse 1s infinite alternate;
+    margin-bottom: 20px;
+  }
+  #game-over-screen p {
+    color: #888;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  #game-over-screen button {
+    padding: 15px 30px;
+    background: transparent;
+    color: #ccc;
+    border: 1px solid #555;
+    cursor: pointer;
+    font-family: Georgia, serif;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  #game-over-screen button:hover {
+    background: #333;
+    color: #fff;
+    border-color: #aaa;
+  }
+  @keyframes bloodPulse {
+    from { text-shadow: 0 0 10px rgba(255, 0, 0, 0.3); }
+    to { text-shadow: 0 0 30px rgba(255, 0, 0, 1); }
   }
 
   /* Kotak Akhir Bab */
   #end-screen {
-    display: none;
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 10000;
-    width: 100%;
-    max-width: 400px;
+    display: none; position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); text-align: center;
+    z-index: 10000; width: 100%; max-width: 400px;
   }
-  #end-screen h1 {
-    font-size: 24px;
-    letter-spacing: 4px;
-    color: #888;
-    margin-bottom: 30px;
-    font-weight: normal;
-  }
+  #end-screen h1 { font-size: 24px; letter-spacing: 4px; color: #888; margin-bottom: 30px; font-weight: normal; }
   #end-screen button, #end-screen a {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
-    padding: 14px;
-    background: transparent;
-    color: #ccc;
-    border: 1px solid #444;
-    text-decoration: none;
-    font-family: Georgia, serif;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    text-align: center;
+    display: block; width: 80%; margin: 10px auto; padding: 14px;
+    background: transparent; color: #ccc; border: 1px solid #444;
+    text-decoration: none; font-family: Georgia, serif; font-size: 15px;
+    cursor: pointer; transition: 0.3s; text-align: center;
   }
-  #end-screen button:hover, #end-screen a:hover {
-    background: #222;
-    color: #fff;
-    border-color: #888;
-  }
+  #end-screen button:hover, #end-screen a:hover { background: #222; color: #fff; border-color: #888; }
 
   /* ==================== PANEL METER KETAKUTAN ==================== */
   #fear-panel {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: rgba(15, 15, 15, 0.9);
-    border: 1px solid #333;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-family: sans-serif;
-    z-index: 9999;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    transition: all 0.3s;
+    position: fixed; top: 15px; left: 15px;
+    background: rgba(15, 15, 15, 0.9); border: 1px solid #333;
+    padding: 8px 12px; border-radius: 5px;
+    font-family: sans-serif; z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: all 0.3s;
   }
-
   .fear-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-    color: #aaa;
-    transition: color 0.3s;
+    display: flex; justify-content: space-between;
+    font-size: 11px; font-weight: bold; letter-spacing: 1px;
+    margin-bottom: 5px; color: #aaa; transition: color 0.3s;
   }
-
-  .fear-bar-bg {
-    width: 120px;
-    height: 8px;
-    background: #222;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  #fear-bar {
-    height: 100%;
-    width: 0%;
-    background: #4a5d4a;
-    transition: width 1s ease-in-out, background 0.5s;
-  }
-
-  #fear-panel.high {
-    border-color: #ff3333;
-    animation: pulsePanel 0.5s infinite alternate;
-  }
-  #fear-panel.high .fear-label {
-    color: #ff3333;
-    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-  }
-
-  @keyframes pulsePanel {
-    from { box-shadow: 0 0 5px rgba(255, 0, 0, 0.2); }
-    to { box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
-  }
+  .fear-bar-bg { width: 120px; height: 8px; background: #222; border-radius: 4px; overflow: hidden; }
+  #fear-bar { height: 100%; width: 0%; background: #4a5d4a; transition: width 1s ease-in-out, background 0.5s; }
+  
+  #fear-panel.high { border-color: #ff3333; animation: pulsePanel 0.5s infinite alternate; }
+  #fear-panel.high .fear-label { color: #ff3333; text-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+  @keyframes pulsePanel { from { box-shadow: 0 0 5px rgba(255, 0, 0, 0.2); } to { box-shadow: 0 0 20px rgba(255, 0, 0, 0.8); } }
 
   /* ==================== EFEK GETARAN LAYAR ==================== */
-  .shake {
-    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-  }
+  .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
   @keyframes shake {
-    10%, 90% { transform: translate3d(-2px, 0, 0); }
-    20%, 80% { transform: translate3d(3px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
-    40%, 60% { transform: translate3d(5px, 0, 0); }
+    10%, 90% { transform: translate3d(-4px, 0, 0); }
+    20%, 80% { transform: translate3d(6px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
   }
 
   /* Teks Dasar */
-  p {
-    font-size: 16px;
-    margin-top: 0;
-    margin-bottom: 16px;
-    min-height: 1.7em;
-  }
-  
-  h2 { 
-    font-weight: normal; letter-spacing: 2px; color: #888; 
-    font-size: 14px; text-transform: uppercase; margin-bottom: 24px; 
-    margin-top: 60px;
-  }
+  p { font-size: 16px; margin-top: 0; margin-bottom: 16px; min-height: 1.7em; }
+  h2 { font-weight: normal; letter-spacing: 2px; color: #888; font-size: 14px; text-transform: uppercase; margin-bottom: 24px; margin-top: 60px; }
   
   .scene { display: none; }
   .scene.active { display: block; animation: fade 0.6s ease; }
@@ -191,31 +142,35 @@
     transition: background 0.2s, border 0.2s, opacity 0.5s;
     opacity: 0;
   }
-  
   button:hover { background: #262626; border-color: #555; color: #fff; }
   button.done { color: #6a9a6a; border-color: #2a3a2a; }
   button.done::after { content: " ✓"; float: right; color: #6a9a6a; }
   
+  button.danger { border-color: #551111; color: #aa5555; }
+  button.danger:hover { background: #2a0000; color: #ff5555; border-color: #ff3333; }
+
   .divider { border-top: 1px solid #222; margin: 24px 0; }
 </style>
 </head>
 <body>
 
-<!-- Tombol X untuk keluar -->
 <a href="pilihchapter.html" id="btn-exit" title="Kembali ke Daftar Bab">✕</a>
 
-<!-- Panel Ketakutan -->
+<!-- Layar Game Over -->
+<div id="game-over-screen">
+  <h1>GAME OVER</h1>
+  <p id="game-over-text">Teriakan Lily memudar... <br>Kegelapan menelannya.</p>
+  <button onclick="retryCheckpoint()">Coba Lagi dari Pilihan Terakhir</button>
+</div>
+
 <div id="fear-panel">
   <div class="fear-label">
     <span>FEAR</span>
     <span id="fear-text">0%</span>
   </div>
-  <div class="fear-bar-bg">
-    <div id="fear-bar"></div>
-  </div>
+  <div class="fear-bar-bg"><div id="fear-bar"></div></div>
 </div>
 
-<!-- Layar Akhir Bab (Tersembunyi) -->
 <div id="end-screen">
   <h1>AKHIR BAB 1</h1>
   <button onclick="triggerNextChapter()">Lanjut ke Bab 2 →</button>
@@ -233,12 +188,22 @@
   <p>Lily berlari. Terus berlari. Bukan karena ia tahu harus ke mana. Hanya saja, berdiri diam terasa seperti pilihan yang salah.</p>
   <div class="divider"></div>
   <button onclick="go('a2')">Terus berlari, tanpa menoleh</button>
-  <button onclick="go('a3')">Menoleh sebentar, melihat apa yang terjadi</button>
+  <button class="danger" onclick="go('a3_consequence')">Menoleh sebentar, melihat keramaian</button>
+</div>
+
+<!-- ============ ADEGAN KONSEKUENSI 1 (MENOLEH = GAME OVER) ============ -->
+<div id="a3_consequence" class="scene" data-fear="80" data-shake="true">
+  <p>Lily menoleh. Ia menghentikan langkahnya untuk melihat apa yang sedang terjadi di belakangnya.</p>
+  <p>Kesalahan besar.</p>
+  <p>Kerumunan orang panik itu berlari ke arahnya. Seseorang menabraknya keras dari depan. Tubuh Lily terpental ke aspal.</p>
+  <p>Sebelum ia bisa bangkit, tubuh-tubuh lain menginjaknya. Sepatu, lutut, dan beban massa yang histeris menghantam wajah dan dadanya. Lily mencoba berteriak, tapi suaranya tenggelam.</p>
+  <div class="divider"></div>
+  <button class="danger" onclick="triggerGameOver('Tulang rusuk Lily remuk diinjak massa yang panik.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 2 ============ -->
-<div id="a2" class="scene" data-fear="30" data-shake="true">
-  <p>Lily tidak menoleh. Ia terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala.</p>
+<div id="a2" class="scene" data-fear="40" data-shake="true">
+  <p>Lily terus berlari, melewati badan-badan yang terbaring, melewati seseorang yang duduk di trotoar sambil memeluk lututnya, melewati mobil yang pintunya terbuka dan mesinnya masih menyala. Tangannya masih perih, tapi ia mengabaikannya.</p>
   <p>Lalu seseorang menabraknya dari samping. Tubuhnya menghantam dinding toko. Kepalanya berdenging.</p>
   <p>Tubuh orang itu dingin, berat, dan tangannya mencengkeram bahu Lily dengan kekuatan yang tidak masuk akal. Lily menjerit. Ia mendorong, meronta, dan untuk sesaat—wajah itu terlalu dekat. Mata yang berair dan merah, lalu mulutnya terbuka.</p>
   <p>Gigi itu menyentuh lengan Lily. Cukup dalam untuk menggores kulit hingga darah mengalir dari lengannya.</p>
@@ -246,22 +211,21 @@
   <p>Tak jauh dari sana, Lily mendengar sirine. Sirine yang begitu familiar yang memberikannya harapan.</p>
   <div class="divider"></div>
   <button onclick="go('a4')">Melihat lengan yang tergores</button>
-  <button onclick="go('a5')">Terus berlari ke arah suara sirine</button>
+  <button class="danger" onclick="go('a5_consequence')">Terus berlari tanpa memedulikan luka</button>
 </div>
 
-<!-- ============ ADEGAN 3 ============ -->
-<div id="a3" class="scene" data-fear="25">
-  <p>Lily menoleh.</p>
-  <p>Seorang pria baru saja terlepas dari kejaran orang-orang aneh. Ia bersembunyi di balik badan mobil, duduk dan meremas bahu kanannya yang terluka. Tangannya terkontaminasi—entah oleh apa, ia tidak tahu. Lalu ia menyentuh lukanya yang berdarah.</p>
-  <p>Tiba-tiba, seluruh tubuh pria itu kaku. Tubuhnya menegang. Matanya perlahan menjadi merah.</p>
-  <p>Lily tidak menunggu lebih lama. Ia berlari ketakutan.</p>
+<!-- ============ ADEGAN KONSEKUENSI 2 (ABAIKAN LUKA = GAME OVER) ============ -->
+<div id="a5_consequence" class="scene" data-fear="85" data-shake="true">
+  <p>Lily mengabaikan lengan dan tangannya yang berdarah. Ia terus berlari menembus kerumunan.</p>
+  <p>Namun tubuhnya sudah lelah. Darah yang mengalir deras membuat pandangannya berkunang-kunang. Ia tersandung kakinya sendiri dan jatuh berguling di aspal yang kasar.</p>
+  <p>Lily mencoba berdiri, namun kakinya lemas. Di saat yang sama, seseorang yang terjangkiti berjalan kaku ke arahnya dan menubruk tubuhnya yang tak berdaya.</p>
   <div class="divider"></div>
-  <button onclick="go('a2')">Terus berlari, tanpa menoleh lagi</button>
+  <button class="danger" onclick="triggerGameOver('Kehabisan darah membuat tubuh Lily lumpuh, dan ia tak bisa melarikan diri.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 4 ============ -->
-<div id="a4" class="scene" data-fear="30" data-police="true">
-  <p>Lily melihat lengannya. Ada goresan gigi—tipis, merah, dan darah mengalir pelan dari lukanya. Ia menyentuhnya dengan jari. Perih terasa.</p>
+<div id="a4" class="scene" data-fear="35" data-police="true">
+  <p>Lily melihat lengan dan tangannya. Ada goresan gigi—tipis, merah, dan darah mengalir pelan dari lukanya. Tangannya juga lecet akibat terjatuh. Ia menyentuhnya dengan jari. Perih terasa.</p>
   <p>Ia tidak punya air untuk membasuh. Ia tidak punya apa pun. Jadi ia hanya menekan lengannya dengan telapak tangan, lalu berlari lagi.</p>
   <p>Di kejauhan, ia melihat lampu biru. Polisi.</p>
   <div class="divider"></div>
@@ -269,19 +233,19 @@
 </div>
 
 <!-- ============ ADEGAN 5 ============ -->
-<div id="a5" class="scene" data-fear="40" data-police="true">
-  <p>Lily berlari ke arah polisi. Ia mengangkat tangannya, berteriak minta tolong. Untuk sesaat, ia merasa lega—polisi itu melihatnya, mengangguk, mengangkat tangannya seolah akan menolong.</p>
+<div id="a5" class="scene" data-fear="45" data-police="true">
+  <p>Lily mendekati polisi. Ia mengangkat tangannya, berteriak minta tolong. Untuk sesaat, ia merasa lega—polisi itu melihatnya, mengangguk, mengangkat tangannya seolah akan menolong.</p>
   <p>Lalu tangan itu mencengkeram lengan Lily. Kuat dan kasar.</p>
   <p>"Jangan bergerak," perintah polisi itu. Ucapan itu bukan seperti suara orang yang menyelamatkan.</p>
   <p>Lily semakin panik dan membuka mulut untuk bertanya. Tapi polisi itu sudah menekan radionya dan berkata sesuatu yang tidak ia dengar.</p>
   <p>Lily diseret paksa. Ia dibawa menuju mobil besar yang biasa digunakan untuk membawa kriminal. Di dekatnya, ada orang lain—seorang pria tua, seorang wanita muda, juga seorang remaja yang menangis. Mereka juga ditangkap. Mereka juga diseret. Namun, tidak ada yang menjelaskan apa pun.</p>
   <div class="divider"></div>
   <button onclick="go('a6')">Melihat ke arah orang-orang lain yang ditangkap</button>
-  <button onclick="go('a7')">Mencoba bertanya pada polisi</button>
+  <button onclick="go('a7')">Memberontak dan mencoba bertanya</button>
 </div>
 
 <!-- ============ ADEGAN 6 ============ -->
-<div id="a6" class="scene" data-fear="40">
+<div id="a6" class="scene" data-fear="45">
   <p>Wanita muda di sebelahnya menangis tanpa suara. Pria tua itu diam, matanya kosong. Remaja yang di depannya terus berkata, "Aku tidak melakukan apa-apa, aku tidak melakukan apa-apa," seperti mantra.</p>
   <p>Lily melihat lengan wanita muda itu. Ada bekas gigitan. Sama seperti lengannya.</p>
   <p>Lalu ia melihat lengan pria tua itu. Tidak ada bekas gigitan. Tapi ia juga ditangkap.</p>
@@ -291,7 +255,7 @@
 </div>
 
 <!-- ============ ADEGAN 7 ============ -->
-<div id="a7" class="scene" data-fear="50" data-shake="true">
+<div id="a7" class="scene" data-fear="55" data-shake="true">
   <p>"Kenapa? Kenapa aku ditangkap? Harusnya kalian menangkap orang-orang gila itu!"</p>
   <p>Polisi itu tidak menoleh. Ia terus berjalan, menyeret Lily dan yang lainnya seperti menyeret tas masuk ke dalam mobil.</p>
   <p>Sebuah borgol dikaitkan pada kedua tangan Lily. Matanya ditutup dengan kain hingga ia tak tahu keadaan di dalam mobil tersebut. Yang bisa ia dengar hanya suara tangisan dan teriakan.</p>
@@ -302,7 +266,7 @@
 </div>
 
 <!-- ============ ADEGAN 8 ============ -->
-<div id="a8" class="scene" data-fear="60">
+<div id="a8" class="scene" data-fear="65">
   <p>Dua jam. Mungkin lebih. Lily tidak bisa menghitung. Mobil itu terus bergerak, dan teriakan di sekitarnya sudah redup—hanya tersisa isak tangis dan doa permohonan.</p>
   <p>Lalu mobil akhirnya berhenti. Lily dan lainnya yang masih kebingungan dibawa turun dengan mata yang masih tertutup. Mereka diseret melewati lorong panjang. Lily tidak bisa melihat apa pun. Yang ia dengar pun sama: permintaan tolong dan jeritan.</p>
   <p>Lalu, sebuah pintu berat terbuka. Polisi itu membuka borgol di tangan Lily dan mendorongnya masuk dengan kasar hingga ia tersungkur di lantai itu.</p>
@@ -312,15 +276,24 @@
 </div>
 
 <!-- ============ ADEGAN 9 ============ -->
-<div id="a9" class="scene" data-fear="65">
+<div id="a9" class="scene" data-fear="70">
   <p>Ruangan itu tidak besar, tidak kecil. Cukup untuk berbaring, tidak cukup untuk berjalan. Lantainya beton. Tidak ada kasur. Tidak ada jendela. Satu lampu di langit-langit, redup, berkedip pelan.</p>
   <p>Dinding-dindingnya penuh goresan. Bukan goresan yang rapi, seperti dibuat saat ketakutan.</p>
   <p>Dan di salah satu dinding di sebelah kanannya, tepat berada sejajar dengan tinggi badan, ada bekas sesuatu yang berwarna merah:</p>
   <p>Lily pun menelan ludah ketakutan saat menyadari bekas apa itu.</p>
   <div class="divider"></div>
   <button onclick="go('a10')">Menyentuh bekas itu</button>
-  <button onclick="go('a11')">Berteriak</button>
+  <button class="danger" onclick="go('a11_consequence')">Berteriak histeris</button>
   <button onclick="go('a12')">Duduk di sudut, menahan napas</button>
+</div>
+
+<!-- ============ ADEGAN KONSEKUENSI 3 (TERIAK HISTERIS = GAME OVER) ============ -->
+<div id="a11_consequence" class="scene" data-fear="100" data-shake="true">
+  <p>"LEPASKAN AKU! KALIAN GILA!"</p>
+  <p>Lily berteriak sekuat tenaga. Tenggorokannya terkoyak, suaranya memantul di dinding beton. Ia berteriak tanpa henti, memukul-mukul dinding dengan tangannya yang masih lecet hingga kulitnya terkelupas dan berdarah.</p>
+  <p>Karena terlalu banyak berteriak dan menangis, tenggorokan Lily membengkak parah. Napasnya tersengal. Ia mulai tersedak ludahnya sendiri. Tubuhnya kejang hebat, lalu ia jatuh menghantam lantai beton dengan kepala lebih dulu.</p>
+  <div class="divider"></div>
+  <button class="danger" onclick="triggerGameOver('Tenggorokan Lily robek karena teriakan, dan benturan di kepalanya merenggut nyawanya.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 10 ============ -->
@@ -383,7 +356,16 @@
   <p>Seorang dokter mendekat. Ia memeriksa mata Lily dengan senter kecil. Lily membuka mulut untuk bertanya, tapi dokter itu sudah berpaling sebelum ia sempat mengucapkan satu kata.</p>
   <div class="divider"></div>
   <button onclick="go('a16')">Melihat ke arah dua orang di kursi lain</button>
-  <button onclick="go('a17')">Menatap dokter yang memeriksanya</button>
+  <button class="danger" onclick="go('a17_consequence')">Meronta sekuat tenaga di kursi</button>
+</div>
+
+<!-- ============ ADEGAN KONSEKUENSI 4 (MERONTA = GAME OVER) ============ -->
+<div id="a17_consequence" class="scene" data-fear="95" data-shake="true">
+  <p>Lily menarik tangannya dengan brutal. Tali pengikat itu menggesek kulit pergelangan tangannya, menggores hingga berdarah. Ia menghentak-hentakkan kakinya, membuat kursi berderit nyaring.</p>
+  <p>Melihat itu, seorang petugas ber-APD menghampiri. Tanpa bicara, ia menyuntikkan sesuatu yang dingin ke leher Lily.</p>
+  <p>Ternyata itu bukan obat penenang. Itu adalah cairan pembersih sel yang sangat keras. Tubuh Lily langsung menegang. Jantungnya berdetak kencang, lalu berhenti. Matanya terbelalak melihat langit-langit laboratorium sebelum pandangannya memudar selamanya.</p>
+  <div class="divider"></div>
+  <button class="danger" onclick="triggerGameOver('Petugas salah menyuntikkan cairan. Jantung Lily berhenti seketika.')">Gelap...</button>
 </div>
 
 <!-- ============ ADEGAN 16 ============ -->
@@ -420,7 +402,7 @@
 </div>
 
 <!-- ============ ADEGAN 19 (INTERAKSI TERAKHIR) ============ -->
-<div id="a19" class="scene" data-fear="100">
+<div id="a19" class="scene" data-fear="100" data-shake="true">
   <p>Lily membuka mulut. "Apa maksudnya? Kenapa air liurku?"</p>
   <p>Tidak ada yang menjawab. Asisten itu sudah pergi. Dokter itu sudah berpaling.</p>
   <p>Lalu seseorang mendekat dari sisi lain—bukan dokter, bukan asisten. Seseorang yang tidak bisa ia lihat wajahnya, dengan tangan yang gemetar. Ia membawa jarum suntik.</p>
@@ -434,11 +416,11 @@
 </div>
 
 <script>
-// ==================== LOGIKA EFEK KETIKAN & INTERAKSI ====================
-
 let isTyping = false;
 let typeTimeout;
 let policeInterval;
+let currentSceneId = 'a1';
+let lastSafeSceneId = 'a1'; // Menyimpan adegan terakhir sebelum terjebak di konsekuensi
 
 function finishTyping() {
   if (!isTyping) return;
@@ -448,9 +430,7 @@ function finishTyping() {
   const activeScene = document.querySelector('.scene.active');
   const paragraphs = activeScene.querySelectorAll('p');
   paragraphs.forEach(p => {
-    if (p.dataset.fulltext) {
-      p.innerHTML = p.dataset.fulltext;
-    }
+    if (p.dataset.fulltext) p.innerHTML = p.dataset.fulltext;
   });
   
   const btns = activeScene.querySelectorAll('button');
@@ -461,141 +441,3 @@ function startTyping(sceneElement) {
   isTyping = true;
   const paragraphs = sceneElement.querySelectorAll('p');
   const btns = sceneElement.querySelectorAll('button');
-  
-  btns.forEach(btn => btn.style.opacity = '0');
-  
-  let pIndex = 0;
-  let charIndex = 0;
-  
-  paragraphs.forEach(p => {
-    p.dataset.fulltext = p.innerHTML;
-    p.innerHTML = '';
-  });
-
-  function typeChar() {
-    if (!isTyping) return;
-    
-    if (pIndex >= paragraphs.length) {
-      isTyping = false;
-      btns.forEach(btn => btn.style.opacity = '1');
-      return;
-    }
-
-    const currentP = paragraphs[pIndex];
-    const fullText = currentP.dataset.fulltext;
-    
-    if (charIndex < fullText.length) {
-      const charsToAdd = fullText.substring(charIndex, charIndex + 3);
-      currentP.innerHTML += charsToAdd;
-      charIndex += 3;
-      typeTimeout = setTimeout(typeChar, 20); 
-    } else {
-      pIndex++;
-      charIndex = 0;
-      typeTimeout = setTimeout(typeChar, 400); 
-    }
-  }
-  
-  typeChar();
-}
-
-document.body.addEventListener('click', finishTyping);
-
-function go(id) {
-  if (isTyping) finishTyping();
-
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  const targetScene = document.getElementById(id);
-  targetScene.classList.add('active');
-  
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  document.querySelectorAll('button[onclick*="go(\'' + id + '\')"]').forEach(btn => {
-    btn.classList.add('done');
-  });
-
-  // GETARAN LAYAR
-  if (targetScene.dataset.shake === 'true') {
-    document.body.classList.add('shake');
-    setTimeout(() => document.body.classList.remove('shake'), 500); 
-  }
-
-  // METER KETAKUTAN
-  const fearLevel = targetScene.dataset.fear || 0;
-  const fearBar = document.getElementById('fear-bar');
-  const fearText = document.getElementById('fear-text');
-  const fearPanel = document.getElementById('fear-panel');
-
-  fearBar.style.width = fearLevel + '%';
-  fearText.innerText = fearLevel + '%';
-  
-  if (fearLevel < 40) {
-    fearBar.style.background = '#4a5d4a'; 
-    fearPanel.classList.remove('high');
-  } else if (fearLevel < 80) {
-    fearBar.style.background = '#b58b00'; 
-    fearPanel.classList.remove('high');
-  } else {
-    fearBar.style.background = '#ff3333'; 
-    fearPanel.classList.add('high'); 
-  }
-
-  // EFEK LAMPU POLISI
-  clearInterval(policeInterval);
-  document.body.classList.remove('police-blue', 'police-red');
-
-  if (targetScene.dataset.police === 'true') {
-    let isBlue = true;
-    document.body.classList.add('police-blue');
-    policeInterval = setInterval(() => {
-      if (isBlue) {
-        document.body.classList.remove('police-blue');
-        document.body.classList.add('police-red');
-      } else {
-        document.body.classList.remove('police-red');
-        document.body.classList.add('police-blue');
-      }
-      isBlue = !isBlue;
-    }, 800); 
-  }
-
-  startTyping(targetScene);
-}
-
-// ==================== FUNGSI LAYAR MENGHITAM (FADE OUT) ====================
-function triggerEnding() {
-  document.querySelector('#a19 button').style.display = 'none';
-  document.body.classList.add('fade-out');
-
-  setTimeout(() => {
-    document.getElementById('end-screen').style.display = 'block';
-    document.getElementById('fear-panel').style.display = 'none';
-    document.querySelector('h2').style.display = 'none';
-    document.getElementById('a19').style.display = 'none';
-    document.body.classList.remove('fade-out');
-  }, 1600);
-}
-
-// ==================== FUNGSI LANJUT KE BAB 2 ====================
-function triggerNextChapter() {
-  document.body.classList.add('fade-out');
-  
-  setTimeout(() => {
-    window.location.href = 'bab2.html';
-  }, 1000);
-}
-
-window.onload = () => {
-  document.getElementById('end-screen').style.display = 'none';
-  
-  const initialScene = document.getElementById('a1');
-  const initialFear = initialScene.dataset.fear;
-  document.getElementById('fear-bar').style.width = initialFear + '%';
-  document.getElementById('fear-text').innerText = initialFear + '%';
-  
-  startTyping(initialScene);
-};
-</script>
-
-</body>
-</html>
