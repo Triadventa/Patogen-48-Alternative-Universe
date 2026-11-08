@@ -18,10 +18,15 @@
     transition: background-color 1s ease, color 1s ease, opacity 1.5s ease;
   }
 
-  /* ==================== EFEK LAYAR KABUR (BLUR) SANGAT RINGAN ==================== */
-  .fear-blur p, .fear-blur button {
-    filter: blur(0.5px); /* Diturunkan jadi 0.5px saja agar tetap terbaca jelas */
-    opacity: 0.95;
+  /* ==================== EFEK LAYAR KABUR (BLUR) ==================== */
+  /* Hanya menargetkan paragraf dan tombol di dalam halaman yang aktif */
+  .fear-blur p {
+    filter: blur(0.8px);
+    opacity: 0.9;
+  }
+  .fear-blur button {
+    filter: blur(0.4px);
+    opacity: 0.9;
   }
 
   /* ==================== EFEK JUMPSCARE (KILAT MERAH) ==================== */
@@ -462,8 +467,11 @@ function go(id, newFear) {
     lastSafeSceneId = id;
   }
 
-  // Bersihkan efek blur dari semua scene sebelum pindah
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
+  // 1. HAPUS SEMUA EFEK BLUR DARI SEMUA SCENE SEBELUM PINDAH
+  document.querySelectorAll('.scene').forEach(s => {
+    s.classList.remove('fear-blur');
+    s.classList.remove('active');
+  });
 
   if (id.includes('flashback')) {
     hasFlashedBack = true;
@@ -472,7 +480,6 @@ function go(id, newFear) {
     
     setTimeout(() => {
       document.body.classList.add('flashback-bg');
-      document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
@@ -482,14 +489,18 @@ function go(id, newFear) {
     }, 800); 
     
   } else {
-    if (!id.includes('flashback')) {
-      document.body.classList.remove('flashback-bg');
-    }
-    
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    document.body.classList.remove('flashback-bg');
     const targetScene = document.getElementById(id);
     if (targetScene) targetScene.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // 2. PASANG EFEK BLUR HANYA DI SCENE YANG BARU DIBUKA
+    if (targetScene) {
+      let currentFear = parseInt(newFear) || 0;
+      if (currentFear >= 65) {
+        targetScene.classList.add('fear-blur');
+      }
+    }
     
     updateEffects(id, newFear);
   }
@@ -525,11 +536,6 @@ function updateEffects(id, newFear) {
   } else {
     fearBar.style.background = '#ff3333'; 
     fearPanel.classList.add('high'); 
-  }
-
-  // Pasang efek blur HANYA pada scene yang sedang aktif
-  if (currentFear >= 65) {
-    targetScene.classList.add('fear-blur');
   }
 
   clearInterval(policeInterval);
@@ -568,11 +574,15 @@ function triggerGameOver(reason) {
     document.getElementById('game-over-screen').style.display = 'flex';
     document.getElementById('fear-panel').style.display = 'none';
     document.querySelector('h2').style.display = 'none';
-    document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
+    
+    // 3. HAPUS EFEK BLUR SAAT GAME OVER
+    document.querySelectorAll('.scene').forEach(s => {
+      s.style.display = 'none';
+      s.classList.remove('fear-blur');
+    });
     
     document.body.classList.remove('jumpscare-flash');
     document.body.classList.remove('shake');
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('fear-blur'));
   }, 800); 
 }
 
@@ -580,7 +590,13 @@ function retryCheckpoint() {
   document.getElementById('game-over-screen').style.display = 'none';
   document.getElementById('fear-panel').style.display = 'block';
   document.querySelector('h2').style.display = 'block';
-  document.querySelectorAll('.scene').forEach(s => s.style.display = '');
+  
+  // 4. TAMPILKAN KEMBALI SCENE DAN PASTIKAN BLUR BERSIH
+  document.querySelectorAll('.scene').forEach(s => {
+    s.style.display = '';
+    s.classList.remove('fear-blur');
+  });
+  
   go(lastSafeSceneId, parseInt(document.getElementById('fear-text').innerText));
 }
 
